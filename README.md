@@ -1,4 +1,4 @@
-# Simulatore ISO CNC – G-Code (fresa e tornio)
+# Simulatore CNC ISO – G-Code (fresa e tornio)
 
 Simulatore web di macchina CNC con programmazione ISO/G-code, pensato per la didattica. Funziona interamente nel browser: HTML, CSS e JavaScript puro, senza dipendenze né installazione.
 
