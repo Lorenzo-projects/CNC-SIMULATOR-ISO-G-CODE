@@ -44,7 +44,7 @@ N60 G96 S400 M03
 
 ## Avvio
 
-Apri il sito https://lorenzo-projects.github.io/CNC-SIMULATOR-ISO-G-CODE-/ e lavora.
+Apri il sito https://lorenzo-projects.github.io/CNC-SIMULATOR-ISO-G-CODE/ e lavora.
 
 ---
 
