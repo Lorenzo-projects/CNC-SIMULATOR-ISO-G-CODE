@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulatore ISO CNC - G-Code</title>
+<style>
+:root{--bg:#14171c;--p:#1b2027;--p2:#222932;--ln:#2e3744;--tx:#d5dbe3;--mu:#7d8999;--or:#ff8a3d;--bl:#3b9cff;--tl:#19d3c5;--ye:#ffd24a;--rd:#ff5d5d;--gr:#6fdc8c;font-family:"Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font-size:14px}
+body{display:grid;grid-template-rows:auto 1fr auto;height:100vh}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;background:var(--p);border-bottom:2px solid var(--or)}
+h1{font-size:16px;margin:0 10px 0 0;font-weight:700;letter-spacing:.3px}
+h1 small{display:block;font-weight:400;color:var(--mu);font-size:11px}
+button,select,input{font:inherit;color:var(--tx);background:var(--p2);border:1px solid var(--ln);border-radius:4px;padding:6px 10px}
+button{cursor:pointer}button:hover:not(:disabled){border-color:var(--or)}button:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--ye)}
+#run{background:#1f5c37;border-color:#2c8a52}#pause{background:#5c4a1f}#stop{background:#5c1f1f}
+.sp{flex:1}
+main{display:grid;grid-template-columns:minmax(280px,38%) 1fr;min-height:0}
+#edw{position:relative;display:flex;min-height:0;border-right:1px solid var(--ln);background:#12151a}
+#gut{width:44px;overflow:hidden;background:var(--p);color:var(--mu);text-align:right;font:13px/20px Consolas,monospace;padding:8px 0;flex:none}
+#gut div{padding-right:8px;height:20px}
+.ed{position:relative;flex:1;overflow:hidden}
+#HL{position:absolute;left:0;top:0;margin:0;padding:8px;font:13px/20px Consolas,monospace;white-space:pre;min-width:100%;pointer-events:none}
+#HL div{height:20px;min-width:100%}
+#code{position:absolute;inset:0;width:100%;height:100%;padding:8px;margin:0;font:13px/20px Consolas,monospace;white-space:pre;overflow:auto;background:transparent;color:transparent;caret-color:#fff;border:0;border-radius:0;resize:none;outline:0}
+#HL .cur,#gut .cur{background:rgba(255,210,74,.2);box-shadow:inset 3px 0 var(--ye)}
+#HL .er,#gut .er{background:rgba(255,93,93,.18);color:var(--rd)}
+.g{color:var(--or);font-weight:700}.m{color:#c792ea;font-weight:700}.ax{color:var(--bl)}.ij{color:var(--tl)}.fs{color:var(--gr)}#HL .co,#gut .co{background:rgba(255,138,61,.2);color:var(--or)}#con .w{color:var(--or)}.ctl select{padding:3px}.ctl{max-width:470px}.cm{color:#66727f;font-style:italic}.n{color:#e8d9a8}
+.cv{position:relative;min-width:0;min-height:0;background:#0f1216}
+canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+.ov{position:absolute;right:10px;top:10px;display:flex;gap:6px}
+.hint{position:absolute;left:10px;bottom:8px;color:var(--mu);font-size:11px;pointer-events:none}
+footer{display:grid;grid-template-columns:auto auto 1fr;gap:10px;padding:8px 12px;background:var(--p);border-top:1px solid var(--ln)}
+.box{background:#12151a;border:1px solid var(--ln);border-radius:4px;padding:8px}
+#mon{display:grid;grid-template-columns:repeat(3,auto);gap:2px 16px;font:13px Consolas,monospace}
+#mon b{color:var(--ye);font-weight:700}
+.ctl label{display:flex;gap:6px;align-items:center;margin-bottom:6px;color:var(--mu)}
+.ctl input[type=number]{width:64px;padding:3px 6px}
+#con{height:104px;overflow:auto;font:12px Consolas,monospace}
+#con .e{color:var(--rd)}#con .o{color:var(--gr)}#con .i{color:var(--mu)}
+#tip{position:fixed;display:none;max-width:280px;background:#000;border:1px solid var(--or);padding:6px 9px;border-radius:4px;font-size:12px;z-index:9;pointer-events:none}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:8}
+#modal.on{display:flex}
+#modal .box{width:min(640px,94vw);max-height:88vh;overflow:auto;background:var(--p);padding:16px}
+table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--ln);padding:5px 8px;text-align:left}
+td:first-child{color:var(--or);font:700 13px Consolas,monospace;white-space:nowrap}
+@media(max-width:800px){body{height:auto}main{grid-template-columns:1fr}#edw{height:300px}.cv{height:380px}footer{grid-template-columns:1fr}}
+
+header{gap:6px 10px}.grp{display:flex;gap:2px;padding:3px;background:#12151a;border:1px solid var(--ln);border-radius:6px}.grp button{border:0}
+main{grid-template-columns:var(--ew,38%) 6px 1fr}#spl{cursor:col-resize;background:var(--ln)}#spl:hover{background:var(--or)}
+.pane{display:flex;flex-direction:column;min-width:0;min-height:0}#edw{flex:1;border-right:0;min-height:0}
+.tb{display:flex;gap:6px;padding:5px 8px;background:var(--p);border-bottom:1px solid var(--ln)}.tb button{padding:3px 10px;font-size:12px}
+.sb{padding:3px 10px;font-size:11px;background:var(--p);border-top:1px solid var(--ln);white-space:nowrap;overflow:hidden}
+.lg{position:absolute;right:10px;bottom:8px;display:flex;gap:10px;font-size:11px;color:var(--mu);background:rgba(15,18,22,.85);padding:4px 8px;border-radius:4px;pointer-events:none}
+.lg span:before{content:"";display:inline-block;width:14px;border-top:2px solid var(--c);margin-right:5px;vertical-align:middle}
+.hint{background:rgba(15,18,22,.85);padding:4px 8px;border-radius:4px}
+footer{grid-template-columns:minmax(240px,.9fr) minmax(380px,1.6fr) minmax(260px,1fr);max-height:44vh;overflow:auto}
+.card{background:#12151a;border:1px solid var(--ln);border-radius:6px;padding:8px 10px;min-width:0}
+.card h3{margin:0 0 6px;font-size:12px;color:var(--mu);font-weight:600;display:flex;justify-content:space-between;align-items:center}.card h3 button{padding:1px 8px;font-size:11px}
+.set{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+fieldset{border:1px solid var(--ln);border-radius:4px;margin:0;padding:4px 8px 6px;display:flex;flex-wrap:wrap;gap:4px 8px;min-width:0}
+legend{color:var(--mu);font-size:11px;padding:0 4px}fieldset label{display:flex;align-items:center;gap:4px}
+fieldset input[type=number]{width:58px;padding:3px 5px}fieldset select{padding:3px}fieldset input[type=range]{width:90px;padding:0}
+input:invalid{border-color:var(--rd)}
+.bar{height:5px;background:var(--p2);border-radius:3px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--or)}
+#con{height:auto;max-height:150px;min-height:90px;overflow:auto}#con div{padding:1px 0}#mon{grid-template-columns:repeat(2,auto)}
+@media(max-width:900px){body{height:auto}main{grid-template-columns:1fr}#spl{display:none}.pane{height:360px}footer{grid-template-columns:1fr;max-height:none}.set{grid-template-columns:1fr}.lg{display:none}}
+canvas{position:absolute;inset:0}</style>
+</head>
+<body>
+<header>
+ <h1>Simulatore ISO CNC<small>Fresatura G-Code &middot; piano XY</small></h1>
+ <select id="ex" aria-label="Programmi di esempio" title="Programmi di esempio"></select>
+ <div class="grp"><button id="run" title="Esegui (F5 o Ctrl+Invio)">&#9654; Run</button><button id="pause" title="Pausa (F6)">&#10074;&#10074; Pausa</button><button id="step" title="Esegui un blocco alla volta (F10)">&#9197; Step</button><button id="stop" title="Ferma e torna al primo blocco (Esc)">&#9632; Stop</button><button id="reset" title="Ricarica il programma e la vista">&#8634; Reset</button></div>
+ <span class="sp"></span><button id="leg" title="Tabella dei codici ISO">? Guida ISO</button>
+</header>
+<main>
+ <div class="pane"><div class="tb"><button id="op" title="Apri un file .nc / .txt">Apri</button><button id="sv" title="Salva il programma sul computer">Salva</button><button id="an" title="Rinumera i blocchi N10, N20, N30...">Rinumera N</button><button id="fx" title="Corregge N mancanti, F/S mancanti e aggiunge M30 finale">Correggi</button><input type="file" id="fo" hidden accept=".nc,.txt,.gcode,.cnc,.iso,.tap"></div><section id="edw"><div id="gut"><div></div></div><div class="ed"><pre id="HL"></pre><textarea id="code" spellcheck="false" aria-label="Editor G-Code"></textarea></div></section><div class="sb" id="sb"></div></div><div id="spl" title="Trascina per ridimensionare"></div>
+ <section class="cv"><canvas id="cv"></canvas><div class="ov"><button id="zi" title="Zoom +">+</button><button id="zo" title="Zoom -">&minus;</button><button id="fit" title="Inquadra il grezzo">Adatta</button></div><div class="hint"><span id="cur">X -  Y -</span> &middot; Rotella: zoom &middot; Trascina: sposta &middot; Doppio clic: zero pezzo</div><div class="lg"><span style="--c:#ff8a3d">G0 rapido</span><span style="--c:#3b9cff">G1 lavoro</span><span style="--c:#19d3c5">G2/G3 arco</span></div></section>
+</main>
+<footer>
+ <section class="card"><h3>Stato macchina</h3><div id="mon"></div><div class="bar" title="Avanzamento del programma"><i id="pb"></i></div></section>
+ <section class="card"><h3>Impostazioni</h3><div class="set">
+  <fieldset><legend>Grezzo (mm)</legend><label>Larg. <input type="number" id="sw" value="100" min="1"></label><label>Alt. <input type="number" id="sh" value="60" min="1"></label><label>Spess. <input type="number" id="sz" value="20" min="1"></label></fieldset>
+  <fieldset><legend>Utensile e simulazione</legend><label>&Oslash; std <input type="number" id="td" value="10" min=".5" step=".5"></label><label title="Utensili: T:diametro separati da virgola">Tab. T <input id="tt" value="1:10, 2:8" style="width:120px"></label><label>Velocit&agrave; <input type="range" id="spd" min=".2" max="5" step=".1" value="1"><b id="spdv">1.0x</b></label></fieldset>
+  <fieldset><legend>Zero pezzo</legend><label>X <input type="number" id="px" value="100"></label><label>Y <input type="number" id="py" value="100"></label><label>sul grezzo <select id="zc"><option value="0">sx-basso<option value="1">dx-basso<option value="2">sx-alto<option value="3">dx-alto<option value="4">centro</select></label></fieldset>
+  <fieldset><legend>Zero macchina</legend><label>Angolo <select id="mc"><option value="0">sx-basso<option value="1">dx-basso<option value="2">sx-alto<option value="3">dx-alto<option value="4">centro</select></label><label>Corsa <input type="number" id="mw" value="400" min="10"> &times; <input type="number" id="mh" value="300" min="10"></label></fieldset>
+ </div></section>
+ <section class="card"><h3>Console <button id="cc">Pulisci</button></h3><div id="con" role="log" aria-live="polite"></div></section>
+</footer>
+<div id="tip"></div>
+<div id="modal"><div class="box"><h2 style="margin-top:0">Guida ai codici ISO</h2><table id="lt"></table><p style="color:var(--mu)">Passa il mouse sui codici nell'editor per vedere la spiegazione. Commenti: <code>(testo)</code> oppure <code>; testo</code>.</p><button id="cl">Chiudi</button></div></div>
+
+<script>
+const DICT={N:"Numero di blocco: ogni riga è un blocco, la macchina ne esegue uno alla volta.",M00:"Arresto programmato: la macchina si ferma finché premi Run.",M04:"Avvio mandrino in senso antiorario.",M06:"Cambio utensile (indicato prima con T). Ferma il mandrino con M5.",M08:"Refrigerante ON.",M09:"Refrigerante OFF.",G92:"Con X Y Z: preset del zero pezzo nella posizione attuale. Con S: limite giri massimi.",G94:"Avanzamento F in mm/min.",G95:"Avanzamento F in mm/giro (velocità = F x giri mandrino).",G96:"Velocità di taglio costante: S in m/min (giri calcolati dal diametro utensile).",G97:"S in giri/min costanti.",G00:"Posizionamento rapido: spostamento veloce senza asportare materiale.",G01:"Interpolazione lineare a velocità di lavoro F.",G02:"Interpolazione circolare oraria (CW). Centro con I,J oppure raggio R.",G03:"Interpolazione circolare antioraria (CCW). Centro con I,J oppure raggio R.",G90:"Quote assolute: le coordinate sono riferite allo zero pezzo.",G91:"Quote incrementali: le coordinate sono distanze dalla posizione attuale.",G17:"Piano di lavoro XY (default).",G18:"Piano XZ (non simulato).",G19:"Piano YZ (non simulato).",G21:"Unità in millimetri.",M03:"Avvio mandrino in senso orario.",M05:"Arresto mandrino.",M30:"Fine programma.",F:"Avanzamento in mm/min.",S:"Velocità del mandrino in giri/min.",T:"Numero utensile.",X:"Coordinata asse X.",Y:"Coordinata asse Y.",Z:"Coordinata asse Z (profondità: negativa = dentro il pezzo).",I:"Distanza X dal punto di partenza al centro dell'arco.",J:"Distanza Y dal punto di partenza al centro dell'arco.",R:"Raggio dell'arco (positivo = arco corto, negativo = arco lungo)."};
+const LEG=[["G00","Posizionamento rapido"],["G01","Interpolazione lineare a lavoro"],["G02","Circolare oraria (CW)"],["G03","Circolare antioraria (CCW)"],["G90","Assoluto"],["G91","Incrementale"],["G17","Piano XY (G18/G19 non simulati)"],["M03","Avvio mandrino"],["M05","Arresto mandrino"],["M00","Arresto programmato"],["M04","Mandrino antiorario"],["M06","Cambio utensile (T)"],["M08","Refrigerante ON"],["M09","Refrigerante OFF"],["M30","Fine programma"],["N","Numero di blocco"],["G92","Preset zero / limite giri"],["G94","F in mm/min"],["G95","F in mm/giro"],["G96","Velocità di taglio costante"],["G97","Giri/min costanti"],["F","Avanzamento"],["S","Giri mandrino"],["T","Utensile"],["I","Centro arco X (relativo)"],["J","Centro arco Y (relativo)"],["R","Raggio arco"]];
+const H="N10 G90 G17 G21 G94 ; assoluto, piano XY, mm, avanzamento mm/min\n";
+const EX={
+"Spianatura base":{w:100,h:60,d:10,sz:20,px:100,py:100,zc:0,code:`(SPIANATURA BASE - grezzo 100x60, fresa D10, zero pezzo angolo basso-sx)
+${H}N20 T1 M6 ; chiamo e monto l'utensile 1
+N30 G97 S1200 M3 ; giri fissi 1200, mandrino orario
+N40 G0 X-10 Y5 Z5 ; rapido fuori dal pezzo
+N50 G1 Z-1 F150 ; penetro di 1 mm
+N60 G1 X110 F300 ; passata 1
+N70 G1 Y15 ; passo laterale (G1 modale)
+N80 G1 X-10 ; passata 2
+N90 G1 Y25
+N100 G1 X110 ; passata 3
+N110 G1 Y35
+N120 G1 X-10 ; passata 4
+N130 G1 Y45
+N140 G1 X110 ; passata 5
+N150 G1 Y55
+N160 G1 X-10 ; passata 6
+N170 G0 Z5 ; risalita rapida
+N180 M5 ; mandrino fermo
+N190 M30 ; fine programma`},
+"Circonferenza/Arco":{w:100,h:100,d:6,sz:20,px:200,py:150,zc:4,code:`(CERCHIO E ARCHI - zero pezzo al CENTRO, raggio 30)
+${H}N20 T1 M6
+N30 G97 S2000 M3 M8 ; mandrino ON + refrigerante ON
+N40 G0 X0 Y-30 Z5 ; partenza sotto il centro
+N50 G1 Z-1 F100 ; penetrazione
+N60 G3 X30 Y0 I0 J30 F250 ; quarto antiorario, centro = start+(I,J)
+N70 G3 X0 Y30 I-30 J0 ; secondo quarto antiorario
+N80 G2 X-30 Y0 R30 ; arco orario con raggio R
+N90 G3 X0 Y-30 I30 J0 ; chiudo il percorso
+N100 G0 Z5
+N110 M9 M5 ; spengo refrigerante e mandrino
+N120 M30`},
+"Scanalatura rettangolare":{w:80,h:50,d:8,sz:20,px:100,py:100,zc:0,code:`(SCANALATURA 60x20 - fresa D8, G95 mm/giro e G91)
+N10 G90 G17 G21
+N20 T2 M6
+N30 G97 S1500 M3
+N40 G0 X10 Y15 Z5 ; angolo basso-sx del contorno
+N50 G95 F0.05 ; avanzamento in mm/giro: 0,05 x 1500 = 75 mm/min
+N60 G1 Z-2 ; profondita' 2 mm
+N70 G1 X70 F0.15 ; lato inferiore
+N80 Y35 ; lato destro
+N90 X10 ; lato superiore
+N100 Y15 ; lato sinistro
+N110 G91 G0 Z5 ; incrementale: sale di 5 rispetto a ora
+N120 G90 G0 X0 Y0 ; assoluto, rientro
+N130 M5
+N140 M30`},
+"Esercizio: interferenze (usa Correggi)":{w:60,h:40,d:6,sz:20,px:100,py:100,zc:0,code:`(ESERCIZIO - 2 interferenze volute: premi Correggi per risolverle)
+${H}N20 T1 M6
+N30 G97 S1000 M3
+N40 G0 X-10 Y10 Z5
+N50 G1 Z-2 F100
+N60 G0 X70 ; ERRORE: rapido dentro il materiale
+N70 G1 Y30 F200
+N80 M5
+N90 G1 X-10 ; ERRORE: mandrino fermo in presa
+N100 M30`}};
+const $=id=>document.getElementById(id),cv=$('cv'),c=cv.getContext('2d'),code=$('code'),HL=$('HL'),gut=$('gut');
+let items=[],errs=[],idx=0,prog=0,run=false,stepM=false,pos={x:0,y:0,z:50},snap=initSnap(),curLine=-1,V={s:5,ox:60,oy:300},dpr=1,errL=new Set(),colL=new Set(),crash=null;
+const SW=()=>+$('sw').value||100,SH=()=>+$('sh').value||60,TD=t=>{const m={};($('tt').value||'').split(/[,;]/).forEach(p=>{const[a,b]=p.split(':');if(+a&&+b)m[+a]=+b});return m[t]||+$('td').value||6};
+const SX=x=>V.ox+x*V.s,SY=y=>V.oy-y*V.s;
+function con(m,k,ln){const d=document.createElement('div');d.className=k||'i';d.textContent=m;if(ln!=null){d.dataset.l=ln;d.title='Vai alla riga';d.style.cursor='pointer'}$('con').appendChild(d);$('con').scrollTop=1e9}
+
+/* ---------- PARSER ---------- */
+function setup(){const W=SW(),H=SH(),cn=(k,w,h)=>[[0,0],[-w,0],[0,-h],[-w,-h],[-w/2,-h/2]][k],PX=+$('px').value||0,PY=+$('py').value||0,MW=+$('mw').value||400,MH=+$('mh').value||300,a=cn(+$('zc').value,W,H),b=cn(+$('mc').value,MW,MH);return{PX,PY,T:+$('sz').value||20,st:{x:PX+a[0],y:PY+a[1],w:W,h:H},lim:{x:b[0],y:b[1],w:MW,h:MH}}}
+function initSnap(){return{f:0,s:0,t:0,sp:0,cl:0,fm:94,rpm:0,ox:+$('px').value||0,oy:+$('py').value||0}}
+function collide(g,sp,S){const n=Math.min(400,Math.ceil(g.len/.5)+1),r=(g.d||TD())/2,s=S.st,l=S.lim;
+ for(let j=0;j<=n;j++){const p=at(g,j/n),inS=p.x+r>s.x&&p.x-r<s.x+s.w&&p.y+r>s.y&&p.y-r<s.y+s.h;let m=null;
+  if(p.x<l.x||p.x>l.x+l.w||p.y<l.y||p.y>l.y+l.h)m='Fuori corsa macchina (oltre l\'area di lavoro)';
+  else if(p.z<-S.T)m='Utensile contro il piano macchina (Z sotto lo spessore del grezzo)';
+  else if(inS&&p.z<0){if(g.k==0){if(!(Math.hypot(g.x1-g.x0,g.y1-g.y0)<1e-6&&g.z1>=g.z0))m='G00 rapido dentro il materiale: urto utensile/pezzo (usa G1 per scendere)'}else if(!sp)m='Mandrino fermo: utensile in presa nel pezzo'}
+  if(m){g.colT=j/n;return m}}
+ return null}
+function parse(src){
+ const S=setup(),L=src.split('\n'),its=[],er=[],wr=[],cols=[];
+ let m=null,abs=true,ox=S.PX,oy=S.PY,cx=-ox,cy=-oy,cz=50,f=0,s=0,sp=0,cl=0,fm=94,cs=97,mx=0,ta=0,pend=null,lastN=-1,end=false,endSeen=false,tail=0;
+ const err=(i,x)=>er.push({i,x}),warn=(i,x)=>wr.push({i,x});
+ L.forEach((raw,i)=>{
+  if(end){if(!tail&&raw.replace(/\([^)]*\)/g,'').replace(/;.*$/,'').trim()){warn(i,'Righe dopo M30: vengono ignorate');tail=1}return}
+  const txt=raw.replace(/\([^)]*\)/g,'').replace(/;.*$/,'').toUpperCase().replace(/(\d),(\d)/g,'$1.$2').trim();
+  if(!txt)return;
+  const re=/([A-Z])\s*([-+]?(?:\d+\.?\d*|\.\d+))/g,rest=txt.replace(re,'').trim();
+  if(rest){err(i,`Sintassi non valida: "${rest}" (dopo ogni lettera serve un numero; usa lo zero 0, non la lettera O)`);return}
+  const w={},gs=[],ms=[],tk=[];let mm,bad=false;
+  while((mm=re.exec(txt))){const k=mm[1],v=parseFloat(mm[2]);tk.push(k);
+   if(k=='G')gs.push(v);else if(k=='M')ms.push(v);
+   else if('XYZIJRFSTN'.includes(k)){if(k in w){err(i,`${k} ripetuto nello stesso blocco`);bad=true}w[k]=v}
+   else{err(i,`Lettera non supportata: ${k}. Ammesse: N G M X Y Z I J R F S T`);bad=true}}
+  if(tk[0]!='N')err(i,'Il blocco deve iniziare con il numero di blocco (es. N10)');
+  else if(!Number.isInteger(w.N)||w.N<0)err(i,'Numero di blocco N non valido (intero positivo)');
+  else{if(w.N<=lastN)err(i,`N${w.N} non crescente (blocco precedente N${lastN})`);lastN=w.N}
+  if(bad)return;
+  const gm=gs.filter(g=>g>=0&&g<=3),c=(a,b)=>gs.filter(g=>g==a||g==b).length>1,mS=ms.filter(k=>k>=3&&k<=5);
+  if(gm.length>1)err(i,'Due movimenti (G0-G3) nello stesso blocco');
+  if(c(90,91))err(i,'G90 e G91 insieme');if(c(94,95))err(i,'G94 e G95 insieme');if(c(96,97))err(i,'G96 e G97 insieme');
+  if(mS.length>1)err(i,'Più comandi mandrino (M3/M4/M5) nello stesso blocco');if(ms.includes(8)&&ms.includes(9))err(i,'M8 e M9 insieme');
+  let ex=null,isEnd=false,stop=false,g92=false;
+  for(const g of gs){
+   if(g>=0&&g<=3&&Number.isInteger(g)){ex=g;m=g}
+   else if(g==17||g==21);
+   else if(g==18||g==19)err(i,`G${g} non simulato: il simulatore lavora solo sul piano XY (G17)`);
+   else if(g==90)abs=true;else if(g==91)abs=false;else if(g==94||g==95)fm=g;else if(g==96||g==97)cs=g;else if(g==92)g92=true;
+   else err(i,`Codice G non supportato: G${g}. Supportati: G0-G3, G17, G21, G90, G91, G92, G94-G97`)}
+  if('F' in w)f=w.F;if('S' in w&&!g92)s=w.S;if('T' in w)pend=w.T;
+  for(const k of ms){
+   if(k==3)sp=1;else if(k==4)sp=-1;else if(k==5)sp=0;else if(k==8)cl=1;else if(k==9)cl=0;else if(k==0)stop=true;
+   else if(k==6){if(pend===null)err(i,"M6 senza T: indica prima l'utensile (es. T1 M6)");else{ta=pend;if(sp)warn(i,'Cambio utensile con mandrino acceso: usa M5 prima di M6')}}
+   else if(k==30||k==2){isEnd=true;sp=0;cl=0}
+   else err(i,`Codice M non supportato: M${k}. Supportati: M0, M3, M4, M5, M6, M8, M9, M30`)}
+  if((mS[0]==3||mS[0]==4)&&!s)err(i,'M3/M4 senza velocità S');
+  if(g92){
+   if('S' in w)mx=w.S;
+   const xy='X' in w||'Y' in w;
+   if(xy){const mxp=cx+ox,myp=cy+oy;if('X' in w)cx=w.X;if('Y' in w)cy=w.Y;ox=mxp-cx;oy=myp-cy}
+   if('Z' in w)cz=w.Z;
+   if(!xy&&!('S' in w)&&!('Z' in w))err(i,'G92 senza X/Y/Z (preset zero) né S (limite giri)')}
+  const rpm=cs==96?Math.min(mx||1e9,1000*s/(Math.PI*TD(ta))):s;
+  const ax=!g92&&('X' in w||'Y' in w||'Z' in w);let seg=null;
+  if(ex!==null&&!ax)err(i,`Manca il valore X/Y/Z per G${ex}`);
+  else if(ax){
+   if(m===null)err(i,'Movimento senza G0/G1/G2/G3 attivo');
+   else{
+    const nx=abs?(w.X??cx):cx+(w.X||0),ny=abs?(w.Y??cy):cy+(w.Y||0),nz=abs?(w.Z??cz):cz+(w.Z||0);
+    seg={k:m,x0:cx,y0:cy,z0:cz,x1:nx,y1:ny,z1:nz};let ok=true;
+    if(m>=1&&!f){err(i,`Manca avanzamento F per G${m}`);ok=false}
+    else if(m>=1&&fm==95&&(!sp||!rpm)){err(i,'G95 (mm/giro) richiede mandrino acceso (M3/M4) con S');ok=false}
+    if(m>=2&&ok){
+     if('R' in w&&('I' in w||'J' in w)){err(i,'Usa I,J oppure R, non entrambi');ok=false}
+     const cw=m==2,dx=nx-cx,dy=ny-cy,d=Math.hypot(dx,dy);let ccx,ccy;
+     if(!ok);
+     else if('R' in w){
+      if(d<1e-9){err(i,'Arco con R tra punti coincidenti: usa I,J per il cerchio completo');ok=false}
+      else{const q=w.R*w.R-d*d/4;
+       if(q<-1e-6){err(i,`Raggio R${w.R} troppo piccolo per la corda di ${d.toFixed(3)} mm`);ok=false}
+       else{const h=Math.sqrt(Math.max(q,0)),k=(w.R>0?1:-1)*h/d,n=cw?[dy,-dx]:[-dy,dx];ccx=(cx+nx)/2+k*n[0];ccy=(cy+ny)/2+k*n[1]}}}
+     else if('I' in w||'J' in w){ccx=cx+(w.I||0);ccy=cy+(w.J||0)}
+     else{err(i,`Manca il centro (I,J) o il raggio R per G${m}`);ok=false}
+     if(ok){const r=Math.hypot(cx-ccx,cy-ccy),r2=Math.hypot(nx-ccx,ny-ccy);
+      if(r<1e-9){err(i,'Raggio arco nullo');ok=false}
+      else if(Math.abs(r-r2)>0.01){err(i,`Arco non valido: raggio iniziale ${r.toFixed(3)} diverso da finale ${r2.toFixed(3)} (controlla I,J)`);ok=false}
+      else{const a0=Math.atan2(cy-ccy,cx-ccx),a1=Math.atan2(ny-ccy,nx-ccx);let dd=a1-a0;
+       if(cw){if(dd>=-1e-9)dd-=2*Math.PI}else{if(dd<=1e-9)dd+=2*Math.PI}
+       Object.assign(seg,{cx:ccx,cy:ccy,r,a0,dd});seg.len=Math.hypot(Math.abs(dd)*r,nz-cz)}}}
+    else if(ok)seg.len=Math.hypot(nx-cx,ny-cy,nz-cz);
+    if(!ok)seg=null;
+    else{seg.fv=m==0?2400:fm==95?f*rpm:f;cx=nx;cy=ny;cz=nz;
+     seg.x0+=ox;seg.x1+=ox;seg.y0+=oy;seg.y1+=oy;if(m>=2){seg.cx+=ox;seg.cy+=oy}
+     seg.d=TD(ta);seg.col=collide(seg,sp,S);if(seg.col)cols.push({i,x:seg.col})}}}
+  const desc=[...gs.map(g=>DICT['G'+String(g).padStart(2,'0')]),...ms.map(k=>DICT['M'+String(k).padStart(2,'0')])].filter(Boolean).join(' ');
+  its.push({i,seg,end:isEnd,stop,N:w.N,desc,snap:{f,s,t:ta,sp,cl,fm,cs,rpm:rpm>1e8?0:rpm,ox,oy}});
+  if(isEnd){end=true;endSeen=true}
+ });
+ if(its.length&&!endSeen)warn(L.length-1,'Il programma non termina con M30');
+ return{its,er,wr,col:cols}}
+
+/* ---------- EDITOR ---------- */
+function hlLine(l){return l.replace(/(\([^)]*\)?|;.*)|([A-Za-z])(\s*[-+]?\d*\.?\d*)|([\s\S])/g,(a,cm,k,n,o)=>{
+ const e=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+ if(cm)return`<span class="cm">${e(cm)}</span>`;
+ if(k){const u=k.toUpperCase(),cl=u=='G'?'g':u=='M'?'m':'XYZ'.includes(u)?'ax':'IJR'.includes(u)?'ij':'FST'.includes(u)?'fs':'n';return`<span class="${cl}">${k}${e(n)}</span>`}
+ return e(o)})}
+function render(){
+ const L=code.value.split('\n');
+ HL.innerHTML=L.map((l,i)=>`<div class="${i==curLine?'cur ':''}${errL.has(i)?'er':colL.has(i)?'co':''}">${hlLine(l)||' '}</div>`).join('');
+ gut.firstChild.outerHTML=`<div>${L.map((l,i)=>`<div class="${i==curLine?'cur ':''}${errL.has(i)?'er':colL.has(i)?'co':''}">${i+1}</div>`).join('')}</div>`;
+ sync()}
+function sync(){HL.style.transform=`translate(${-code.scrollLeft}px,${-code.scrollTop}px)`;gut.firstChild.style.transform=`translateY(${-code.scrollTop}px)`}
+code.addEventListener('scroll',sync);
+code.addEventListener('input',()=>{reparse()});['keyup','click'].forEach(v=>code.addEventListener(v,sbar));
+code.addEventListener('keydown',e=>{if(e.key=='Tab'){e.preventDefault();document.execCommand('insertText',false,'  ')}});
+const tip=$('tip'),cw0=(()=>{c.font=getComputedStyle(code).font;return c.measureText('M').width})();
+code.addEventListener('mousemove',e=>{
+ const r=code.getBoundingClientRect(),li=Math.floor((e.clientY-r.top-8+code.scrollTop)/20),col=Math.floor((e.clientX-r.left-8+code.scrollLeft)/cw0),ln=code.value.split('\n')[li];
+ let txt=null;
+ if(ln!==undefined){const re=/([A-Za-z])\s*[-+]?\d*\.?\d*/g;let m;const cmt=ln.search(/[;(]/);
+  while((m=re.exec(ln))){if(col>=m.index&&col<m.index+m[0].length&&(cmt<0||m.index<cmt)){
+   const k=m[1].toUpperCase(),n=parseFloat(m[0].slice(1));
+   txt=(k=='G'||k=='M')?DICT[k+String(n).padStart(2,'0')]:DICT[k];break}}}
+ if(txt){tip.textContent=txt;tip.style.display='block';tip.style.left=Math.min(e.clientX+14,innerWidth-300)+'px';tip.style.top=e.clientY+16+'px'}else tip.style.display='none'});
+code.addEventListener('mouseleave',()=>tip.style.display='none');
+
+/* ---------- SIMULAZIONE ---------- */
+function reparse(){
+ const r=parse(code.value);items=r.its;errs=r.er;errL=new Set(errs.map(e=>e.i));colL=new Set(r.col.map(e=>e.i));
+ $('con').innerHTML='';
+ errs.forEach(e=>con(`Riga ${e.i+1}: ${e.x}`,'e',e.i));
+ r.wr.forEach(e=>con(`Riga ${e.i+1}: attenzione - ${e.x}`,'w',e.i));r.col.forEach(e=>con(`Riga ${e.i+1}: INTERFERENZA - ${e.x}`,'e',e.i));if(!errs.length)con('Sintassi OK'+(r.col.length?' ma ci sono interferenze: la simulazione si fermerà.':'. Premi Run o Step.'),'o');
+ resetSim();updBtn();sbar();save();if(!errs.length&&items.length)con(analyze(),'i')}
+function analyze(){let tw=0,tr=0,t=0,zm=0;const tl=new Set();items.forEach(it=>{const g=it.seg;if(it.snap.t)tl.add('T'+it.snap.t);if(!g||!g.len)return;if(g.k==0)tr+=g.len;else tw+=g.len;t+=g.len/g.fv;zm=Math.min(zm,g.z0,g.z1)});return`Analisi: ${items.length} blocchi, lavoro ${tw.toFixed(0)} mm, rapidi ${tr.toFixed(0)} mm, tempo stimato ${Math.floor(t)}:${String(Math.round(t%1*60)).padStart(2,'0')} min, Z minima ${zm}${tl.size?', utensili '+[...tl].join(' '):''}${zm>=0&&tw>0?'. ATTENZIONE: Z non scende mai sotto 0, nessuna asportazione':''}`}
+function updBtn(){$('run').disabled=!!errs.length;$('step').disabled=!!errs.length}
+function resetSim(){run=false;idx=0;prog=0;pos={x:0,y:0,z:50};snap=initSnap();crash=null;curLine=-1;render();mon()}
+function mon(){
+ const p=(k,v)=>`<span>${k} <b>${v}</b></span>`,it=items[Math.min(idx,items.length-1)];
+ $('mon').innerHTML=p('X',(pos.x-snap.ox).toFixed(3))+p('Y',(pos.y-snap.oy).toFixed(3))+p('Z',pos.z.toFixed(3))+p('Mac.X',pos.x.toFixed(2))+p('Mac.Y',pos.y.toFixed(2))+p('Blocco',curLine>=0&&it?'N'+it.N:'-')+p('F',snap.f+(snap.fm==95?' mm/giro':' mm/min'))+p('S',Math.round(snap.rpm||0)+(snap.cs==96?' (G96)':''))+p('T','T'+snap.t)+p('Mandrino',snap.sp>0?'M3 CW':snap.sp<0?'M4 CCW':'OFF')+p('Refr.',snap.cl?'ON':'OFF')+p('Stato',crash?'INTERFERENZA':run?'In esecuzione':idx>=items.length&&idx>0?'Finito':'Fermo');ui()}
+function setLine(i){if(i!==curLine){curLine=i;render();const y=i*20;if(y<code.scrollTop||y>code.scrollTop+code.clientHeight-30){code.scrollTop=Math.max(0,y-code.clientHeight/2);sync()}}}
+function adv(dt){
+ let gd=0;
+ while(run&&dt>0&&gd++<1000){
+  if(idx>=items.length){run=false;break}
+  const it=items[idx],g=it.seg;
+  if(!it.started){it.started=true;snap=it.snap;setLine(it.i);con('N'+it.N+': '+(it.desc||'blocco senza codici G/M'),'i',it.i)}
+  if(!g||g.len<1e-9){if(g)pos=at(g,1);done(it);if(stepM)run=false;continue}
+  const lim=g.col?g.colT*g.len:g.len,v=g.fv/60*8*(+$('spd').value),need=(lim-prog)/v;
+  if(need>dt){prog+=v*dt;dt=0;pos=at(g,prog/g.len)}
+  else{dt-=need;prog=lim;pos=at(g,prog/g.len);
+   if(g.col){crash=g.col;run=false;con('INTERFERENZA riga '+(it.i+1)+': '+g.col+'. Premi Reset.','e',it.i)}
+   else{done(it);if(stepM)run=false}}}
+ mon()}
+function done(it){idx++;prog=0;if(it.end){idx=items.length;run=false;con('M30: fine programma.','o')}else if(it.stop){run=false;con('M0: arresto programmato. Premi Run per continuare.','o')}}
+function at(g,t){return g.k<2?{x:g.x0+(g.x1-g.x0)*t,y:g.y0+(g.y1-g.y0)*t,z:g.z0+(g.z1-g.z0)*t}:{x:g.cx+g.r*Math.cos(g.a0+g.dd*t),y:g.cy+g.r*Math.sin(g.a0+g.dd*t),z:g.z0+(g.z1-g.z0)*t}}
+function tan(g,t){if(g.k<2){const dx=g.x1-g.x0,dy=g.y1-g.y0,d=Math.hypot(dx,dy)||1;return[dx/d,dy/d]}const a=g.a0+g.dd*t,s=g.dd>0?1:-1;return[-Math.sin(a)*s,Math.cos(a)*s]}
+function startRun(step){
+ if(crash){con('Interferenza: premi Reset per ripartire.','e');return}
+ if(errs.length){con('Impossibile eseguire: correggi gli errori di sintassi.','e');return}
+ if(idx>=items.length){items.forEach(i=>i.started=false);resetSim()}
+ stepM=step;run=true;mon()}
+
+/* ---------- DISEGNO ---------- */
+function path(g,t){c.beginPath();if(g.k<2){c.moveTo(SX(g.x0),SY(g.y0));c.lineTo(SX(g.x0+(g.x1-g.x0)*t),SY(g.y0+(g.y1-g.y0)*t))}else c.arc(SX(g.cx),SY(g.cy),g.r*V.s,-g.a0,-(g.a0+g.dd*t),g.dd>0);c.stroke()}
+function arrow(x,y,tx,ty,col,sz){const px=SX(x),py=SY(y),a=Math.atan2(-ty,tx);c.fillStyle=col;c.beginPath();c.moveTo(px+Math.cos(a)*sz,py+Math.sin(a)*sz);c.lineTo(px+Math.cos(a+2.5)*sz,py+Math.sin(a+2.5)*sz);c.lineTo(px+Math.cos(a-2.5)*sz,py+Math.sin(a-2.5)*sz);c.closePath();c.fill()}
+const COL=k=>k==0?'#ff8a3d':k==1?'#3b9cff':'#19d3c5';
+function seg(g,t,alpha){c.globalAlpha=alpha;c.strokeStyle=COL(g.k);c.lineWidth=g.k==0?1.2:2;c.setLineDash(g.k==0?[6,5]:[]);path(g,t);c.setLineDash([]);c.globalAlpha=1}
+function draw(){
+ const w=cv.width/dpr,h=cv.height/dpr;c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
+ const m=[1,2,5,10,20,50,100,200,500,1000].find(v=>v*V.s>=12)||1000,x0=-V.ox/V.s,x1=(w-V.ox)/V.s,y0=(V.oy-h)/V.s,y1=V.oy/V.s;
+ c.font='10px Consolas,monospace';c.textBaseline='top';c.lineWidth=1;
+ for(let x=Math.floor(x0/m)*m;x<=x1;x+=m){const mj=Math.round(x/m)%5==0;c.strokeStyle=mj?'#2e3744':'#1b212a';c.beginPath();c.moveTo(Math.round(SX(x))+.5,0);c.lineTo(Math.round(SX(x))+.5,h);c.stroke();if(mj){c.fillStyle='#6b7787';c.fillText(+x.toFixed(3),SX(x)+3,h-13)}}
+ for(let y=Math.floor(y0/m)*m;y<=y1;y+=m){const mj=Math.round(y/m)%5==0;c.strokeStyle=mj?'#2e3744':'#1b212a';c.beginPath();c.moveTo(0,Math.round(SY(y))+.5);c.lineTo(w,Math.round(SY(y))+.5);c.stroke();if(mj){c.fillStyle='#6b7787';c.fillText(+y.toFixed(3),3,SY(y)+2)}}
+ c.lineWidth=2;c.strokeStyle='#d9534f';c.beginPath();c.moveTo(0,SY(0));c.lineTo(w,SY(0));c.stroke();c.strokeStyle='#5cb85c';c.beginPath();c.moveTo(SX(0),0);c.lineTo(SX(0),h);c.stroke();
+ c.fillStyle='#d9534f';c.fillText('X',w-14,SY(0)+4);c.fillStyle='#5cb85c';c.fillText('Y',SX(0)+5,4);
+ const Z=setup(),st=Z.st,lm=Z.lim;c.setLineDash([8,6]);c.strokeStyle='#7a4a4a';c.lineWidth=1;c.strokeRect(SX(lm.x),SY(lm.y+lm.h),lm.w*V.s,lm.h*V.s);c.setLineDash([]);c.fillStyle='#3a4452';c.fillRect(SX(st.x),SY(st.y+st.h),st.w*V.s,st.h*V.s);c.strokeStyle='#8a97a8';c.strokeRect(SX(st.x),SY(st.y+st.h),st.w*V.s,st.h*V.s);
+ const mk=(x,y,l,col)=>{c.strokeStyle=col;c.fillStyle=col;c.lineWidth=2;c.beginPath();c.arc(SX(x),SY(y),7,0,7);c.stroke();c.fillText(l,SX(x)+10,SY(y)-14)};mk(0,0,'Zero macchina','#ff5d5d');mk(Z.PX,Z.PY,'Zero pezzo','#ffd24a');
+ const cur=idx<items.length?items[idx].seg:null,ct=cur&&cur.len?prog/cur.len:0;
+ c.save();c.beginPath();c.rect(SX(st.x),SY(st.y+st.h),st.w*V.s,st.h*V.s);c.clip();c.lineCap='round';c.lineJoin='round';c.strokeStyle='#161b22';
+ const cut=(g,t)=>{if(g.k>0&&(g.z0+g.z1)/2<0){c.lineWidth=g.d*V.s;path(g,t)}};
+ for(let i=0;i<idx&&i<items.length;i++)if(items[i].seg)cut(items[i].seg,1);if(cur&&run!==undefined&&ct>0)cut(cur,ct);
+ c.restore();c.lineCap='butt';
+ items.forEach(it=>{const g=it.seg;if(g){seg(g,1,.3);if(g.k>=2){const a=g.a0+g.dd/2,tg=tan(g,.5);arrow(g.cx+g.r*Math.cos(a),g.cy+g.r*Math.sin(a),tg[0],tg[1],COL(g.k),6)}}});
+ for(let i=0;i<idx&&i<items.length;i++)if(items[i].seg)seg(items[i].seg,1,1);
+ if(cur&&ct>0)seg(cur,ct,1);
+ const px=SX(pos.x),py=SY(pos.y),r=Math.max(TD(snap.t)/2*V.s,4);
+ c.fillStyle=crash?'rgba(255,60,60,.5)':'rgba(255,210,74,.22)';c.strokeStyle=crash?'#ff3b3b':snap.sp?'#ffd24a':'#aaa';c.lineWidth=2;c.setLineDash(snap.sp?[]:[3,3]);c.beginPath();c.arc(px,py,r,0,7);c.fill();c.stroke();c.setLineDash([]);
+ c.beginPath();c.moveTo(px-r-5,py);c.lineTo(px+r+5,py);c.moveTo(px,py-r-5);c.lineTo(px,py+r+5);c.stroke();
+ if(cur&&run){const tg=tan(cur,ct);arrow(pos.x+tg[0]*(r/V.s+6/V.s),pos.y+tg[1]*(r/V.s+6/V.s),tg[0],tg[1],'#ffd24a',8)}}
+let last=0;function loop(ts){const dt=Math.min((ts-last)/1000,.1);last=ts;if(run)adv(dt);draw();requestAnimationFrame(loop)}
+function fit(){const w=cv.width/dpr,h=cv.height/dpr,st=setup().st,pad=50;V.s=Math.max(.5,Math.min((w-pad*2)/st.w,(h-pad*2)/st.h));V.ox=w/2-(st.x+st.w/2)*V.s;V.oy=h/2+(st.y+st.h/2)*V.s}
+let first=true;let rz=0;new ResizeObserver(()=>{cancelAnimationFrame(rz);rz=requestAnimationFrame(()=>{dpr=devicePixelRatio||1;const b=cv.parentElement.getBoundingClientRect();if(!b.width||!b.height)return;cv.width=Math.round(b.width*dpr);cv.height=Math.round(b.height*dpr);if(first){fit();first=false}})}).observe(cv.parentElement);
+cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,wx=(mx-V.ox)/V.s,wy=(V.oy-my)/V.s,f=e.deltaY<0?1.15:1/1.15;V.s=Math.max(.3,Math.min(400,V.s*f));V.ox=mx-wx*V.s;V.oy=my+wy*V.s},{passive:false});
+let drag=null;cv.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'});
+cv.addEventListener('pointermove',e=>{if(drag){V.ox+=e.clientX-drag.x;V.oy+=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY}}});
+cv.addEventListener('pointerup',()=>{drag=null;cv.style.cursor='grab'});
+
+/* ---------- UI ---------- */
+$('ex').innerHTML=Object.keys(EX).map(k=>`<option>${k}</option>`).join('');
+function load(n){const e=EX[n];code.value=e.code;$('sw').value=e.w;$('sh').value=e.h;$('td').value=e.d;$('tt').value=e.tt||'1:'+e.d+', 2:'+e.d;$('sz').value=e.sz;$('px').value=e.px;$('py').value=e.py;$('zc').value=e.zc;reparse();fit()}
+$('ex').onchange=e=>load(e.target.value);
+$('run').onclick=()=>startRun(false);
+$('pause').onclick=()=>{run=false;mon()};
+$('stop').onclick=()=>{items.forEach(i=>i.started=false);resetSim();con('Simulazione fermata: ritorno al primo blocco.','i')};
+$('step').onclick=()=>startRun(true);
+$('reset').onclick=()=>{reparse();fit()};
+$('fit').onclick=fit;
+$('spd').oninput=e=>$('spdv').textContent=(+e.target.value).toFixed(1)+'x';
+['tt','sw','sh','td','sz','px','py','zc','mc','mw','mh'].forEach(i=>$(i).onchange=()=>{reparse();if(['sw','sh','zc','px','py'].includes(i))fit()});
+cv.ondblclick=e=>{const r=cv.getBoundingClientRect();$('px').value=Math.round((e.clientX-r.left-V.ox)/V.s);$('py').value=Math.round((V.oy-e.clientY+r.top)/V.s);reparse()};
+$('lt').innerHTML='<tr><th>Codice</th><th>Significato</th></tr>'+LEG.map(r=>`<tr title="${DICT[r[0].length==1?r[0]:r[0]]||''}"><td>${r[0]}</td><td>${r[1]}<br><small style="color:var(--mu)">${DICT[r[0]]||''}</small></td></tr>`).join('');
+$('leg').onclick=()=>$('modal').classList.add('on');
+$('cl').onclick=()=>$('modal').classList.remove('on');
+$('modal').onclick=e=>{if(e.target.id=='modal')$('modal').classList.remove('on')};
+const IDS=['tt','sw','sh','td','sz','px','py','zc','mc','mw','mh'];
+function save(){try{const o={code:code.value};IDS.forEach(i=>o[i]=$(i).value);localStorage.setItem('cncsim',JSON.stringify(o))}catch(_){}}
+function sbar(){const t=code.value.slice(0,code.selectionStart).split('\n');$('sb').textContent=`Riga ${t.length}, Col ${t[t.length-1].length+1}  \u00b7  ${items.length} blocchi  \u00b7  ${errs.length} errori  \u00b7  ${colL.size} interferenze`;$('sb').style.color=errs.length?'var(--rd)':colL.size?'var(--or)':'var(--gr)'}
+function ui(){const g=items[idx],f=g&&g.seg&&g.seg.len?prog/g.seg.len:0,e=!!errs.length;$('pb').style.width=(items.length?Math.min(100,100*(idx+f)/items.length):0)+'%';$('run').disabled=e||run;$('step').disabled=e||run;$('pause').disabled=!run;$('stop').disabled=!run&&!idx&&!crash;$('run').innerHTML=idx>0&&idx<items.length&&!run&&!crash?'&#9654; Riprendi':'&#9654; Run'}
+function goto(l){const ls=code.value.split('\n');let p=0;for(let i=0;i<l;i++)p+=ls[i].length+1;code.focus();code.setSelectionRange(p,p+ls[l].length);code.scrollTop=Math.max(0,l*20-code.clientHeight/2);sync();sbar()}
+$('con').onclick=e=>{const l=e.target.dataset.l;if(l!=null)goto(+l)};
+$('cc').onclick=()=>$('con').innerHTML='';
+$('op').onclick=()=>$('fo').click();
+$('fo').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>{code.value=t;reparse();e.target.value=''})};
+$('sv').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([code.value],{type:'text/plain'}));a.download='programma.nc';a.click();URL.revokeObjectURL(a.href)};
+$('an').onclick=()=>{let n=10;code.value=code.value.split('\n').map(l=>{const t=l.trim();if(!t||/^[(;]/.test(t))return l;const r='N'+n+' '+t.replace(/^N\s*\d+\s*/i,'');n+=10;return r}).join('\n');reparse();con('Blocchi rinumerati di 10 in 10.','o')};
+$('fx').onclick=()=>{const d=[],ed=(L,i,f)=>L[i]=f(L[i]),add=(l,t)=>l.replace(/\s*(;.*)?$/,m=>' '+t+m);
+ for(let k=0;k<8;k++){const r=parse(code.value),L=code.value.split('\n');let ch=false;
+  const e=r.er.find(x=>/avanzamento F|senza velocit/.test(x.x)),c=r.col[0];
+  if(e){const F=/avanzamento F/.test(e.x);ed(L,e.i,l=>add(l,F?'F100':'S1000'));d.push((F?'F100':'S1000')+' a riga '+(e.i+1));ch=true}
+  else if(!r.er.length&&c){
+   if(/G00/.test(c.x)){ed(L,c.i,l=>l.replace(/G0?0(?!\d)/i,'G1'));d.push('G0 diventa G1 a riga '+(c.i+1));ch=true}
+   else if(/Mandrino fermo/.test(c.x)){ed(L,c.i,l=>add(l,'M3'));d.push('M3 a riga '+(c.i+1));ch=true}}
+  if(!ch)break;code.value=L.join('\n')}
+ if(parse(code.value).er.some(e=>/numero di blocco|non crescente/.test(e.x))){$('an').click();d.push('numeri di blocco')}
+ if(parse(code.value).wr.some(e=>/non termina con M30/.test(e.x))){const l=code.value.replace(/\s+$/,'').split('\n');let n=0;l.forEach(x=>{const m=x.match(/^\s*N\s*(\d+)/i);if(m)n=Math.max(n,+m[1])});code.value=l.join('\n')+'\nN'+(n+10)+' M30';d.push('M30 finale')}
+ reparse();const left=errs.length+colL.size;
+ con((d.length?'Correzioni: '+d.join(', ')+'. ':'')+(left?'Restano '+left+' problemi da sistemare a mano.':'Programma corretto.'),left?'w':'o')};
+const zoom=f=>{const w=cv.width/dpr,h=cv.height/dpr,wx=(w/2-V.ox)/V.s,wy=(V.oy-h/2)/V.s;V.s=Math.max(.3,Math.min(400,V.s*f));V.ox=w/2-wx*V.s;V.oy=h/2+wy*V.s};
+$('zi').onclick=()=>zoom(1.3);$('zo').onclick=()=>zoom(1/1.3);
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();$('cur').textContent='X '+((e.clientX-r.left-V.ox)/V.s-snap.ox).toFixed(2)+'  Y '+((V.oy-e.clientY+r.top)/V.s-snap.oy).toFixed(2)+' (pezzo)'});
+const spl=$('spl'),mn=document.querySelector('main');
+spl.onpointerdown=e=>{spl.setPointerCapture(e.pointerId);spl.onpointermove=ev=>{const b=mn.getBoundingClientRect();mn.style.setProperty('--ew',Math.max(260,Math.min(b.width-300,ev.clientX-b.left))+'px')}};
+spl.onpointerup=()=>spl.onpointermove=null;
+addEventListener('keydown',e=>{const k=e.key;
+ if(k=='F5'||(e.ctrlKey&&k=='Enter')){e.preventDefault();if(!$('run').disabled)startRun(false)}
+ else if(k=='F6'){e.preventDefault();run?$('pause').click():$('run').disabled||startRun(false)}
+ else if(k=='F10'){e.preventDefault();if(!$('step').disabled)startRun(true)}
+ else if(k=='Escape'){if($('modal').classList.contains('on'))$('cl').click();else if(!$('stop').disabled)$('stop').click()}});
+let saved=null;try{saved=JSON.parse(localStorage.getItem('cncsim'))}catch(_){}
+load('Spianatura base');
+if(saved&&saved.code){IDS.forEach(i=>{if(saved[i]!=null)$(i).value=saved[i]});code.value=saved.code;reparse();fit()}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
