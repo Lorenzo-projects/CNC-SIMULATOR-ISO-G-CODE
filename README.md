@@ -32,7 +32,7 @@ N50 M0 ; RIBALTA PEZZO
 N60 G96 S400 M03
 ```
 
-`M0` spegne mandrino e refrigerante, quindi dopo il ribaltamento serve `M3`.
+`M0` spegne mandrino e refrigerante, quindi dopo il ribaltamento serve `M3` oppure ripremere `Run` manualmente.
 
 ## Struttura del progetto
 
