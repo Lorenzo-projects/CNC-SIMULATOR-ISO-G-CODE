@@ -71,7 +71,7 @@ canvas{position:absolute;inset:0}</style>
 </head>
 <body>
 <header>
- <h1>Simulatore ISO CNC<small>Fresatura G-Code &middot; piano XY</small></h1>
+ <h1>Simulatore CNC<small> ISO / G-Code &middot; piano XYZ</small></h1>
  <select id="ex" aria-label="Programmi di esempio" title="Programmi di esempio"></select>
  <div class="grp"><button id="run" title="Esegui (F5 o Ctrl+Invio)">&#9654; Run</button><button id="pause" title="Pausa (F6)">&#10074;&#10074; Pausa</button><button id="step" title="Esegui un blocco alla volta (F10)">&#9197; Step</button><button id="stop" title="Ferma e torna al primo blocco (Esc)">&#9632; Stop</button><button id="reset" title="Ricarica il programma e la vista">&#8634; Reset</button></div>
  <span class="sp"></span><button id="leg" title="Tabella dei codici ISO">? Guida ISO</button>
@@ -144,7 +144,7 @@ N110 G91 G0 Z5 ; incrementale: sale di 5 rispetto a ora
 N120 G90 G0 X0 Y0 ; assoluto, rientro
 N130 M5
 N140 M30`},
-"Esercizio: interferenze (usa Correggi)":{w:60,h:40,d:6,sz:20,px:100,py:100,zc:0,code:`(ESERCIZIO - 2 interferenze volute: premi Correggi per risolverle)
+"Esercizio: Interferenze (usa Correggi)":{w:60,h:40,d:6,sz:20,px:100,py:100,zc:0,code:`(ESERCIZIO - 2 interferenze volute: premi Correggi per risolverle)
 ${H}N20 T1 M6
 N30 G97 S1000 M3
 N40 G0 X-10 Y10 Z5
