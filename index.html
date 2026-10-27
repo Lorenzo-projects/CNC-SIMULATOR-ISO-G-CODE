@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulatore ISO CNC - G-Code (fresa e tornio)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+ <div class="brand"><h1>Simulatore ISO CNC</h1><small id="sub"></small></div>
+ <div class="seg" role="group" aria-label="Tipo di macchina"><button id="mMill" data-m="mill" title="Fresatrice: piano XY">Fresa</button><button id="mLathe" data-m="lathe" title="Tornio: piano XZ">Tornio</button></div>
+ <select id="ex" aria-label="Programmi di esempio" title="Programmi di esempio"></select>
+ <div class="grp"><button id="run" title="Esegui (F5 o Ctrl+Invio)">&#9654; Run</button><button id="pause" title="Pausa (F6)">&#10074;&#10074; Pausa</button><button id="step" title="Un blocco alla volta (F10)">&#9197; Step</button><button id="stop" title="Ferma e torna al primo blocco (Esc)">&#9632; Stop</button><button id="reset" title="Ricarica il programma e la vista">&#8634; Reset</button></div>
+ <span class="sp"></span>
+ <button id="setb" title="Grezzo, zero pezzo, zero macchina, corse e utensili">&#9881; Impostazioni <span id="badge" class="badge" hidden></span></button>
+ <button id="leg" title="Guida ai codici ISO">? Guida ISO</button>
+</header>
+<main>
+ <div class="pane left">
+  <div class="tb"><button id="op" title="Apri un file .nc / .txt">Apri</button><button id="sv" title="Salva il programma sul computer">Salva</button><button id="an" title="Rinumera i blocchi N10, N20, N30...">Rinumera N</button><button id="fx" class="pri" title="Analizza il programma e corregge da solo errori, parametri mancanti e interferenze">&#10024; Correggi</button><button id="un" title="Ripristina il programma com'era prima di Correggi" hidden>&#8630; Annulla correzione</button><input type="file" id="fo" hidden accept=".nc,.txt,.gcode,.cnc,.iso,.tap"></div>
+  <section id="edw"><div id="gut"><div></div></div><div class="ed"><pre id="HL"></pre><textarea id="code" spellcheck="false" aria-label="Editor G-Code"></textarea></div></section>
+  <div class="sb" id="sb"></div>
+  <section id="conw"><h3>Console <button id="cc">Pulisci</button></h3><div id="con" role="log" aria-live="polite"></div></section>
+ </div>
+ <div id="spl" title="Trascina per ridimensionare"></div>
+ <div class="pane right">
+  <section class="cv">
+   <canvas id="cv"></canvas>
+   <div class="ov"><button id="zi" title="Zoom +">+</button><button id="zo" title="Zoom -">&minus;</button><button id="fit" title="Inquadra il grezzo">Adatta</button></div>
+   <div class="hint"><span id="cur">-</span> &middot; Rotella: zoom &middot; Trascina: sposta &middot; Doppio clic: sposta lo zero pezzo</div>
+   <div class="lg"><span style="--c:#8b98a9">G0 rapido</span><span style="--c:#3b9cff">G1 lavoro</span><span style="--c:#19d3c5">G2/G3 arco</span></div>
+   <aside id="drawer" aria-label="Impostazioni">
+    <div class="dh"><b>Impostazioni</b><button id="dclose" title="Chiudi">&times;</button></div>
+    <div id="chk" class="chk"></div>
+    <div class="tabs"><button data-t="pz" class="on">Pezzo</button><button data-t="zr">Zeri</button><button data-t="mc">Macchina</button><button data-t="ut" class="mill">Utensili</button></div>
+    <div class="tp" data-t="pz">
+     <fieldset class="mill"><legend>Grezzo (mm)</legend><label>Larghezza X <input type="number" id="sw" value="100" min="1"></label><label>Altezza Y <input type="number" id="sh" value="60" min="1"></label><label>Spessore Z <input type="number" id="sz" value="20" min="1"></label></fieldset>
+     <fieldset class="mill"><legend>Posizione del grezzo rispetto allo zero pezzo</legend><label>Angolo di riferimento <select id="zc"><option value="0">sx-basso<option value="1">dx-basso<option value="2">sx-alto<option value="3">dx-alto<option value="4">centro</select></label><label>&Delta;X <input type="number" id="gx" value="0"></label><label>&Delta;Y <input type="number" id="gy" value="0"></label><label title="Quota della faccia superiore del grezzo rispetto a Z0">Z faccia sup. <input type="number" id="gz" value="0"></label><p class="nt">Il grezzo non deve coincidere con lo zero pezzo: puoi spostarlo a piacere (grezzo pi&ugrave; grande, pi&ugrave; alto, decentrato).</p></fieldset>
+     <fieldset class="lathe"><legend>Grezzo cilindrico (mm)</legend><label>Diametro &Oslash; <input type="number" id="ld" value="40" min="1"></label><label>Lunghezza <input type="number" id="ll" value="60" min="1"></label><label title="Di quanto la faccia destra del grezzo supera Z0 (sovrametallo da sfacciare). Negativo = grezzo che non arriva a Z0.">Sporgenza oltre Z0 <input type="number" id="lp" value="2"></label></fieldset>
+     <fieldset class="lathe"><legend>Ganasce</legend><label title="Posizione Z (coordinate macchina) della faccia delle ganasce. Il grezzo deve entrare nelle ganasce.">Faccia ganasce Z (macchina) <input type="number" id="lcf" value="112"></label><p class="nt">Le ganasce occupano tutto lo spazio a sinistra di questa quota: l'utensile non pu&ograve; entrarci.</p></fieldset>
+    </div>
+    <div class="tp" data-t="zr" hidden>
+     <fieldset class="mill"><legend>Zero pezzo (coordinate macchina)</legend><label>X <input type="number" id="px" value="100"></label><label>Y <input type="number" id="py" value="100"></label><p class="nt">Puoi metterlo ovunque nella corsa, anche fuori dal grezzo. Doppio clic sulla vista per posizionarlo col mouse.</p></fieldset>
+     <fieldset class="lathe"><legend>Zero pezzo (coordinate macchina)</legend><label>Z <input type="number" id="lz" value="150"></label><p class="nt">X0 &egrave; sempre sull'asse di rotazione. Z0 puoi metterlo dove vuoi (faccia finita del pezzo). Doppio clic sulla vista per posizionarlo col mouse.</p></fieldset>
+    </div>
+    <div class="tp" data-t="mc" hidden>
+     <fieldset class="mill"><legend>Corsa assi (coordinate macchina)</legend><label>X min <input type="number" id="mx0" value="0"></label><label>X max <input type="number" id="mx1" value="400"></label><label>Y min <input type="number" id="my0" value="0"></label><label>Y max <input type="number" id="my1" value="300"></label><label>Zero macchina nella corsa <select id="mcp"><option value="">scegli...<option value="0">sx-basso<option value="1">dx-basso<option value="2">sx-alto<option value="3">dx-alto<option value="4">centro</select></label><p class="nt">Lo zero macchina &egrave; il punto (0,0) e parte da l&igrave;. Spostalo a piacere cambiando i limiti di corsa.</p></fieldset>
+     <fieldset class="lathe"><legend>Corsa assi (coordinate macchina)</legend><label>Z min <input type="number" id="lz0" value="0"></label><label>Z max <input type="number" id="lz1" value="300"></label><label>X max (&Oslash;) <input type="number" id="lmx" value="200" min="10"></label><label>Zero macchina nella corsa Z <select id="lmp"><option value="">scegli...<option value="0">a sinistra<option value="1">a destra<option value="2">al centro</select></label><p class="nt">Lo zero macchina &egrave; Z0/X0 macchina. Il cambio utensile avviene in Z max, X max.</p></fieldset>
+    </div>
+    <div class="tp" data-t="ut" hidden>
+     <fieldset class="mill"><legend>Utensili</legend><label>&Oslash; standard <input type="number" id="td" value="10" min=".5" step=".5"></label><label title="T:diametro separati da virgola">Tabella T <input id="tt" value="1:10, 2:8"></label><p class="nt">Esempio: 1:10, 2:8 significa T1 &oslash;10 e T2 &oslash;8.</p></fieldset>
+    </div>
+   </aside>
+  </section>
+  <section id="dro">
+   <div class="axes"><div class="axv"><label id="l1">X</label><b id="d1">0.000</b><small id="m1"></small></div><div class="axv mill"><label>Y</label><b id="d2">0.000</b><small id="m2"></small></div><div class="axv"><label>Z</label><b id="d3">0.000</b><small id="m3"></small></div></div>
+   <div id="spin" class="off"><i class="gear">&#9881;</i><div><b id="spt">MANDRINO FERMO (M5)</b><small id="sps"></small></div></div>
+   <div id="chips"></div>
+   <div class="ctl2"><label>Velocit&agrave; <input type="range" id="spd" min=".2" max="5" step=".1" value="1"><b id="spdv">1.0x</b></label><div class="bar" title="Avanzamento del programma"><i id="pb"></i></div></div>
+  </section>
+ </div>
+</main>
+<div id="tip"></div>
+<div id="modal"><div class="box"><div class="mh"><h2>Guida ai codici ISO</h2><input id="gq" type="search" placeholder="Cerca un codice o una parola (es. G2, arco, mandrino)..." aria-label="Cerca nella guida"><div class="seg" id="gm"><button data-f="all" class="on">Tutti</button><button data-f="m">Fresa</button><button data-f="t">Tornio</button></div><button id="cl" title="Chiudi">&times;</button></div><div id="gb"></div></div></div>
+<script src="app.js"></script>
+</body>
+</html>
