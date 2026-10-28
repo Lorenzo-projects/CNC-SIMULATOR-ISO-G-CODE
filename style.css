@@ -1,7 +1,7 @@
 :root{--bg:#14171c;--p:#1b2027;--p2:#222932;--ln:#2e3744;--tx:#d5dbe3;--mu:#8693a4;--or:#4da3ff;--bl:#3b9cff;--tl:#19d3c5;--ye:#ffd24a;--rd:#ff5d5d;--gr:#6fdc8c;font-family:"Segoe UI",system-ui,sans-serif}
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font-size:14px}
-body{display:grid;grid-template-rows:auto 1fr;height:100vh;overflow:hidden}
+html,body{height:100%;min-width:320px;margin:0;background:var(--bg);color:var(--tx);font-size:14px}
+body{display:grid;grid-template-rows:auto minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden}
 [hidden]{display:none!important}
 button,select,input{font:inherit;color:var(--tx);background:var(--p2);border:1px solid var(--ln);border-radius:5px;padding:6px 10px}
 button{cursor:pointer;transition:border-color .12s,background .12s}
@@ -14,7 +14,7 @@ h3{margin:0}
 body.lathe .mill,body:not(.lathe) .lathe{display:none!important}
 
 /* header */
-header{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 14px;background:var(--p);border-bottom:1px solid var(--ln)}
+header{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));background:var(--p);border-bottom:1px solid var(--ln)}
 .brand h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.3px}
 .brand small{display:block;color:var(--mu);font-size:11px}
 .sp{flex:1}
@@ -27,8 +27,8 @@ header{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 1
 .badge.w{background:var(--ye);color:#1a1208}
 
 /* layout */
-main{display:grid;grid-template-columns:var(--ew,42%) 6px 1fr;min-height:0}
-#spl{cursor:col-resize;background:var(--ln)}#spl:hover{background:var(--or)}
+main{display:grid;grid-template-columns:minmax(0,var(--ew,42%)) 8px minmax(0,1fr);min-height:0}
+#spl{cursor:col-resize;background:var(--ln);touch-action:none}#spl:hover{background:var(--or)}
 .pane{display:flex;flex-direction:column;min-width:0;min-height:0}
 .tb{display:flex;flex-wrap:wrap;gap:6px;padding:6px 8px;background:var(--p);border-bottom:1px solid var(--ln)}
 .tb button{padding:3px 11px;font-size:12px}
@@ -134,4 +134,50 @@ fieldset input[type=number],fieldset input:not([type]),fieldset select{width:130
 .tg.m{background:#1f3b5a;color:#8cc4ff}.tg.t{background:#4a3a1a;color:var(--ye)}
 .gnote{padding:8px 12px;color:var(--mu)}
 
-@media(max-width:900px){body{height:auto;overflow:auto}main{grid-template-columns:1fr}#spl{display:none}.pane.left{height:560px}.cv{height:420px;flex:none}.lg{display:none}.cv.dr .ov{right:10px}}
+@media(max-width:1100px),(max-height:700px){
+ body{display:block;height:auto;min-height:100vh;min-height:100dvh;overflow-x:hidden;overflow-y:auto}
+ header{position:sticky;top:0;z-index:8;padding-top:max(8px,env(safe-area-inset-top))}
+ main{display:flex;flex-direction:column;min-height:0}
+ #spl{display:none}
+ .pane.left{height:min(68vh,680px);min-height:400px;flex:none}
+ .pane.right{min-height:0;flex:none}
+ .cv{height:clamp(340px,58vh,680px);min-height:340px;flex:none}
+ #dro{padding:8px max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left))}
+ .lg{display:none}
+ .cv.dr .ov{right:10px}
+ #drawer{padding-bottom:env(safe-area-inset-bottom)}
+}
+@media(max-width:560px){
+ header{gap:6px;padding-left:10px;padding-right:10px}
+ .brand{flex:1 1 100%}
+ .sp{display:none}
+ header>#setb{margin-left:auto}
+ .grp{flex:1 1 100%;justify-content:space-between}
+ .grp button{padding:7px 8px}
+ #ex{flex:1 1 170px;min-width:0}
+ .tb{gap:4px}
+ .tb button{padding:6px 8px}
+ .pane.left{height:64vh;min-height:360px}
+ .cv{height:54vh;min-height:320px}
+ .hint{max-width:calc(100% - 20px);font-size:10px}
+ #dro{gap:6px 8px;padding:8px 10px}
+ .axes{gap:5px;width:100%}
+ .axv{flex:1;min-width:0;padding:4px 7px}
+ .axv b{font-size:17px}
+ #chips{min-width:0;flex-basis:100%}
+ .ctl2{flex:1 1 100%}
+ .cv.dr .ov{left:10px;right:auto}
+ #drawer{max-width:100%;width:100%}
+ .tp{padding-left:8px;padding-right:8px}
+ fieldset label{align-items:flex-start;flex-direction:column;gap:4px}
+ fieldset input[type=number],fieldset input:not([type]),fieldset select{width:100%;min-height:38px}
+ .tabs{overflow-x:auto}
+ .tabs button{padding:8px 10px;white-space:nowrap}
+}
+@media(pointer:coarse){
+ button,select,input{min-height:40px}
+ .ov button{min-width:44px;min-height:44px}
+ #gut{width:38px}
+ #code{font-size:14px}
+}
+@media(pointer:coarse) and (min-width:1101px){main{grid-template-columns:minmax(0,var(--ew,42%)) 14px minmax(0,1fr)}}

@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Simulatore ISO CNC - G-Code (fresa e tornio)</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -28,12 +28,12 @@
   <section class="cv">
    <canvas id="cv"></canvas>
    <div class="ov"><button id="zi" title="Zoom +">+</button><button id="zo" title="Zoom -">&minus;</button><button id="fit" title="Inquadra il grezzo">Adatta</button></div>
-   <div class="hint"><span id="cur">-</span> &middot; Rotella: zoom &middot; Trascina: sposta &middot; Doppio clic: sposta lo zero pezzo</div>
+   <div class="hint"><span id="cur">-</span> &middot; Rotella/pinch: zoom &middot; Trascina: sposta &middot; Doppio clic/tocco: sposta lo zero pezzo</div>
    <div class="lg"><span style="--c:#8b98a9">G0 rapido</span><span style="--c:#3b9cff">G1 lavoro</span><span style="--c:#19d3c5">G2/G3 arco</span></div>
    <aside id="drawer" aria-label="Impostazioni">
     <div class="dh"><b>Impostazioni</b><button id="dclose" title="Chiudi">&times;</button></div>
     <div id="chk" class="chk"></div>
-    <div class="tabs"><button data-t="pz" class="on">Pezzo</button><button data-t="zr">Zeri</button><button data-t="mc">Macchina</button><button data-t="ut" class="mill">Utensili</button></div>
+    <div class="tabs"><button data-t="pz" class="on">Pezzo</button><button data-t="zr">Zeri</button><button data-t="mc">Macchina</button><button data-t="ut">Utensili</button></div>
     <div class="tp" data-t="pz">
      <fieldset class="mill"><legend>Grezzo (mm)</legend><label>Larghezza X <input type="number" id="sw" value="100" min="1"></label><label>Altezza Y <input type="number" id="sh" value="60" min="1"></label><label>Spessore Z <input type="number" id="sz" value="20" min="1"></label></fieldset>
      <fieldset class="mill"><legend>Posizione del grezzo rispetto allo zero pezzo</legend><label>Angolo di riferimento <select id="zc"><option value="0">sx-basso<option value="1">dx-basso<option value="2">sx-alto<option value="3">dx-alto<option value="4">centro</select></label><label>&Delta;X <input type="number" id="gx" value="0"></label><label>&Delta;Y <input type="number" id="gy" value="0"></label><label title="Quota della faccia superiore del grezzo rispetto a Z0">Z faccia sup. <input type="number" id="gz" value="0"></label><p class="nt">Il grezzo non deve coincidere con lo zero pezzo: puoi spostarlo a piacere (grezzo pi&ugrave; grande, pi&ugrave; alto, decentrato).</p></fieldset>
@@ -50,6 +50,7 @@
     </div>
     <div class="tp" data-t="ut" hidden>
      <fieldset class="mill"><legend>Utensili</legend><label>&Oslash; standard <input type="number" id="td" value="10" min=".5" step=".5"></label><label title="T:diametro separati da virgola">Tabella T <input id="tt" value="1:10, 2:8"></label><p class="nt">Esempio: 1:10, 2:8 significa T1 &oslash;10 e T2 &oslash;8.</p></fieldset>
+     <fieldset class="lathe"><legend>Utensili tornio</legend><label>Larghezza standard (mm) <input type="number" id="ltd" value="6" min=".1" max="20" step=".1"></label><label title="T:tipo:larghezza, separati da virgola">Tabella T <input id="lt" value="1:esterno:6, 2:gole:3, 3:troncatore:2, 4:filettatore:0.8"></label><p class="nt">Formato: <code>T:tipo:larghezza</code>, es. <code>1:esterno:6, 2:gole:3, 3:troncatore:2, 4:filettatore:0.8</code>. Seleziona con T01, T02... La larghezza (0,1–20 mm) influenza i tagli radiali; ogni tipo ha una forma distinta nella vista. Il vecchio formato T:larghezza resta compatibile.</p></fieldset>
     </div>
    </aside>
   </section>

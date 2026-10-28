@@ -1,5 +1,5 @@
 /* ======================= DATI: tooltip, guida, esempi ======================= */
-const DICT={N:"Numero di blocco: ogni riga è un blocco, la macchina ne esegue uno alla volta.",M00:"Arresto programmato: la macchina si ferma finché premi Run. Mandrino e refrigerante si spengono. In tornio, se nel commento scrivi RIBALTA / CAPOVOLGI / RUOTA / GIRA PEZZO, il pezzo viene ribaltato.",M02:"Fine programma.",M04:"Avvio mandrino in senso antiorario.",M06:"Cambio utensile (indicato prima con T). Ferma il mandrino con M5. Sul tornio il cambio avviene già con T.",M08:"Refrigerante ON.",M09:"Refrigerante OFF.",G92:"Con X Y Z: preset del zero pezzo nella posizione attuale. Con S: limite giri massimi.",G50:"Limite giri massimi del mandrino (G50 S...), utile con G96.",G04:"Tempo di sosta (non influenza il percorso).",G07:"Tornio: le quote X sono diametri (default).",G08:"Tornio: le quote X sono raggi.",G94:"Avanzamento F in mm/min.",G95:"Avanzamento F in mm/giro (velocità = F x giri mandrino).",G98:"Tornio: avanzamento F in mm/min (come G94).",G99:"Tornio: avanzamento F in mm/giro (come G95).",G96:"Velocità di taglio costante: S in m/min (giri calcolati dal diametro: utensile in fresa, pezzo in tornio).",G97:"S in giri/min costanti.",G00:"Posizionamento rapido: spostamento veloce senza asportare materiale.",G01:"Interpolazione lineare a velocità di lavoro F.",G02:"Interpolazione circolare oraria (CW). Centro con I,J (fresa) o I,K (tornio) oppure raggio R.",G03:"Interpolazione circolare antioraria (CCW). Centro con I,J (fresa) o I,K (tornio) oppure raggio R.",G90:"Quote assolute: le coordinate sono riferite allo zero pezzo.",G91:"Quote incrementali: le coordinate sono distanze dalla posizione attuale.",G17:"Piano di lavoro XY (fresa, default).",G18:"Piano XZ (tornio, default in modalità tornio).",G19:"Piano YZ (non simulato).",G21:"Unità in millimetri.",M03:"Avvio mandrino in senso orario.",M05:"Arresto mandrino.",M30:"Fine programma.",F:"Avanzamento in mm/min (o mm/giro con G95/G99).",S:"Velocità del mandrino in giri/min (o m/min con G96).",T:"Numero utensile (tornio: T01 = utensile 1).",P:"Parametro (tempo di sosta con G4).",X:"Coordinata asse X (tornio: diametro con G7, raggio con G8).",Y:"Coordinata asse Y (solo fresa).",Z:"Coordinata asse Z. Fresa: profondità (negativa = dentro il pezzo). Tornio: asse del mandrino, Z0 = zero pezzo, negativa = verso il mandrino.",I:"Fresa: distanza X dal punto di partenza al centro dell'arco. Tornio: distanza in X (raggio) dal punto di partenza al centro.",J:"Distanza Y dal punto di partenza al centro dell'arco (solo fresa).",K:"Tornio: distanza in Z dal punto di partenza al centro dell'arco.",R:"Raggio dell'arco (positivo = arco corto, negativo = arco lungo)."};
+const DICT={N:"Numero di blocco: ogni riga è un blocco, la macchina ne esegue uno alla volta.",M00:"Arresto programmato: la macchina si ferma finché premi Run. Mandrino e refrigerante si spengono. In tornio, se nel commento scrivi RIBALTA / CAPOVOLGI / RUOTA / GIRA PEZZO, il pezzo viene ribaltato.",M02:"Fine programma.",M04:"Avvio mandrino in senso antiorario.",M06:"Cambio utensile (indicato prima con T). Ferma il mandrino con M5. Sul tornio il cambio avviene già con T.",M08:"Refrigerante ON.",M09:"Refrigerante OFF.",G92:"Con X Y Z: preset del zero pezzo nella posizione attuale. Con S: limite giri massimi.",G50:"Limite giri massimi del mandrino (G50 S...), utile con G96.",G04:"Tempo di sosta (non influenza il percorso).",G07:"Tornio: le quote X sono diametri (default).",G08:"Tornio: le quote X sono raggi.",G32:"Tornio: passata filettata sincronizzata. Richiede utensile filettatore, mandrino acceso e F in mm/giro (passo); ripeti le passate aumentando la profondità.",G94:"Avanzamento F in mm/min.",G95:"Avanzamento F in mm/giro (velocità = F x giri mandrino).",G98:"Tornio: avanzamento F in mm/min (come G94).",G99:"Tornio: avanzamento F in mm/giro (come G95).",G96:"Velocità di taglio costante: S in m/min (giri calcolati dal diametro: utensile in fresa, pezzo in tornio).",G97:"S in giri/min costanti.",G00:"Posizionamento rapido: spostamento veloce senza asportare materiale.",G01:"Interpolazione lineare a velocità di lavoro F.",G02:"Interpolazione circolare oraria (CW). Centro con I,J (fresa) o I,K (tornio) oppure raggio R.",G03:"Interpolazione circolare antioraria (CCW). Centro con I,J (fresa) o I,K (tornio) oppure raggio R.",G90:"Quote assolute: le coordinate sono riferite allo zero pezzo.",G91:"Quote incrementali: le coordinate sono distanze dalla posizione attuale.",G17:"Piano di lavoro XY (fresa, default).",G18:"Piano XZ (tornio, default in modalità tornio).",G19:"Piano YZ (non simulato).",G21:"Unità in millimetri.",M03:"Avvio mandrino in senso orario.",M05:"Arresto mandrino.",M30:"Fine programma.",F:"Avanzamento in mm/min (o mm/giro con G95/G99).",S:"Velocità del mandrino in giri/min (o m/min con G96).",T:"Numero utensile (tornio: T01 = utensile 1; larghezze utensile configurabili nelle Impostazioni).",P:"Parametro (tempo di sosta con G4).",X:"Coordinata asse X (tornio: diametri con G7, raggi con G8).",Y:"Coordinata asse Y (solo fresa).",Z:"Coordinata asse Z. Fresa: profondità (negativa = dentro il pezzo). Tornio: asse del mandrino, Z0 = zero pezzo, negativa = verso il mandrino.",I:"Fresa: distanza X dal punto di partenza al centro dell'arco. Tornio: distanza in X (raggio) dal punto di partenza al centro.",J:"Distanza Y dal punto di partenza al centro dell'arco (solo fresa).",K:"Tornio: distanza in Z dal punto di partenza al centro dell'arco.",R:"Raggio dell'arco (positivo = arco corto, negativo = arco lungo)."};
 // m: 'mt' fresa e tornio, 'm' solo fresa, 't' solo tornio
 const GUIDE=[
 {t:'1. Struttura del programma',o:1,i:[
@@ -12,6 +12,7 @@ const GUIDE=[
  {c:'G1 / G01',n:'Interpolazione lineare',m:'mt',s:'G1 X.. Y.. Z.. F..',d:'Movimento in linea retta alla velocità di lavoro F. È modale: resta attivo finché non cambi movimento, quindi puoi scrivere solo le coordinate che cambiano.',e:'N50 G1 Z-1 F150'},
  {c:'G2 / G02',n:'Arco orario (CW)',m:'mt',s:'Fresa: G2 X.. Y.. I.. J..   Tornio: G2 X.. Z.. I.. K..',d:'I,J (fresa) o I,K (tornio) sono le distanze dal punto di partenza al centro dell\'arco. In alternativa si dà il raggio R (positivo = arco corto, negativo = arco lungo). In tornio I è un raggio, anche con X in diametro.',e:'N80 G2 X-30 Y0 R30'},
  {c:'G3 / G03',n:'Arco antiorario (CCW)',m:'mt',s:'Come G2',d:'Come G2 ma in senso antiorario. Per un cerchio completo usa I,J (con R non si può).',e:'N60 G3 X30 Y0 I0 J30'},
+ {c:'G32',n:'Passata di filettatura (tornio)',m:'t',s:'T filettatore  G32 X.. Z.. F..',d:'Esegue una passata sincronizzata al mandrino. F è il passo in mm/giro, anche se è attivo G94. Richiede mandrino acceso e utensile di tipo filettatore. Ripeti manualmente le passate con profondità X progressiva e rientro rapido all\'inizio tra una passata e l\'altra. La vista mostra le creste in sezione, non l\'elica 3D.',e:'N60 G32 Z-25 F1.5'},
  {c:'G4 / G04',n:'Sosta',m:'mt',s:'G4 P.. (secondi)',d:'Pausa programmata; non cambia il percorso.',e:'N90 G4 P1'}]},
 {t:'3. Quote e zeri',o:1,i:[
  {c:'G90',n:'Quote assolute',m:'mt',s:'G90',d:'Le coordinate sono riferite allo zero pezzo (default).',e:'N10 G90'},
@@ -39,7 +40,7 @@ const GUIDE=[
  {c:'M3',n:'Mandrino orario',m:'mt',s:'M3 S..',d:'Accende il mandrino in senso orario. Senza mandrino acceso non si può lavorare.',e:'N30 G97 S1200 M3'},
  {c:'M4',n:'Mandrino antiorario',m:'mt',s:'M4 S..',d:'Accende il mandrino in senso antiorario.',e:'N30 M4 S800'},
  {c:'M5',n:'Stop mandrino',m:'mt',s:'M5',d:'Ferma il mandrino. Da dare prima di cambiare utensile e a fine lavoro.',e:'N180 M5'},
- {c:'T',n:'Utensile',m:'mt',s:'Fresa: T1 M6   Tornio: T01',d:'In fresa T sceglie l\'utensile e M6 lo monta (diametri nella tabella utensili). In tornio T01 = utensile 1 (due cifre, senza correttore): il cambio è immediato.',e:'T2 M6'},
+ {c:'T',n:'Utensile',m:'mt',s:'Fresa: T1 M6   Tornio: T01',d:'In fresa T sceglie l\'utensile e M6 lo monta (diametri nella tabella utensili). In tornio T01 = utensile 1 (due cifre, senza correttore): il cambio è immediato. Configura tipo e larghezza nelle Impostazioni: esterno, gole, troncatore o filettatore.',e:'T2 M6'},
  {c:'M6',n:'Cambio utensile',m:'m',s:'T.. M6',d:'Monta l\'utensile indicato con T. Spegni prima il mandrino con M5.',e:'N20 T1 M6'},
  {c:'M8',n:'Refrigerante ON',m:'mt',s:'M8',d:'Accende il refrigerante.',e:'N30 M3 M8'},
  {c:'M9',n:'Refrigerante OFF',m:'mt',s:'M9',d:'Spegne il refrigerante.',e:'N110 M9 M5'}]},
@@ -156,6 +157,32 @@ N140 G1 X42
 N150 G0 X44 Z2 ; allontanamento
 N160 M5 ; mandrino fermo
 N170 M30 ; fine programma`},
+"Troncatura: distacco del pezzo":{mode:'lathe',ld:40,ll:60,lp:2,lz:150,lcf:112,lz0:0,lz1:300,lmx:200,code:`(TRONCATURA - il tratto oltre il taglio si stacca e scompare)
+N10 G90 G18 G21 G94 G7
+N20 G50 S1800
+N30 T03 ; utensile stretto, larghezza 2 mm in tabella T
+N40 G97 S900 M3
+N50 G0 X44 Z-10 ; posizione di troncatura, 10 mm prima della faccia
+N60 G1 X0 F30 ; taglio fino all'asse: il materiale non piu collegato scompare
+N70 G0 X44
+N80 M5
+N90 M30`},
+"Filettatura ISO con G32":{mode:'lathe',ld:40,ll:60,lp:2,lz:150,lcf:112,lz0:0,lz1:300,lmx:200,code:`(FILETTATURA - passate G32 sincronizzate; passo 1,5 mm)
+N10 G90 G18 G21 G94 G7
+N20 G50 S1800
+N30 T04 ; utensile filettatore
+N40 G97 S900 M3
+N50 G0 X44 Z2
+N60 G1 X39 F60 ; prima profondita' (diametro 39)
+N70 G32 X38 Z-25 F1.5 ; passata sincronizzata, F e' il passo
+N80 G0 X44 Z-25 ; rientro radiale
+N90 G0 Z2
+N100 G1 X37 F60 ; seconda passata piu' profonda
+N110 G32 X36 Z-25 F1.5
+N120 G0 X44 Z-25
+N130 G0 Z2
+N140 M5
+N150 M30`},
 "Profilo con smusso e raccordo":{mode:'lathe',ld:50,ll:80,lp:3,lz:150,lcf:93,lz0:0,lz1:300,lmx:200,code:`(TORNIO - profilo finito con smusso 3x45 e raccordo R5; grezzo D50 L80, sporge 3 mm)
 N10 G90 G18 G21 G95 G7
 N20 G50 S2000
@@ -228,6 +255,9 @@ const $=id=>document.getElementById(id),cv=$('cv'),c=cv.getContext('2d'),code=$(
 const DZ=.1;
 let MODE='mill',PROF=null,items=[],errs=[],idx=0,prog=0,run=false,stepM=false,pos={x:0,y:0,z:50},snap={f:0,s:0,t:0,sp:0,cl:0,fm:94,cs:97,rpm:0,ox:0,oy:0,dia:true,abs:true},curLine=-1,V={s:5,ox:60,oy:300},dpr=1,errL=new Set(),colL=new Set(),fixL=new Set(),crash=null,setupIss=[],backup=null;
 const TD=t=>{const m={};($('tt').value||'').split(/[,;]/).forEach(p=>{const[a,b]=p.split(':');if(+a&&+b)m[+a]=+b});return m[t]||+$('td').value||6};
+const LATHE_TOOL_TYPES={esterno:'Utensile esterno',gole:'Utensile per gole',troncatore:'Troncatore',filettatore:'Utensile filettatore'};
+const LT=t=>{const m={};($('lt').value||'').split(/[,;]/).forEach(p=>{const[a,kind,value]=p.trim().split(':'),legacy=Number.isFinite(+kind);if(+a&&(legacy||LATHE_TOOL_TYPES[kind])&&+(legacy?kind:value))m[+a]={type:legacy?'esterno':kind,width:+(legacy?kind:value)}});return m[t]||{type:'esterno',width:num('ltd',6)}};
+const LTW=t=>LT(t).width,LTN=t=>LATHE_TOOL_TYPES[LT(t).type]||LATHE_TOOL_TYPES.esterno;
 const SX=x=>V.ox+x*V.s,SY=y=>V.oy-y*V.s;
 const num=(id,d)=>{const v=parseFloat($(id).value);return isFinite(v)?v:d};
 function con(m,k,ln){const d=document.createElement('div');d.className=k||'i';d.textContent=m;if(ln!=null){d.dataset.l=ln;d.title='Vai alla riga';d.style.cursor='pointer'}$('con').appendChild(d);$('con').scrollTop=1e9}
@@ -254,6 +284,9 @@ function checkSetup(S){const o=[],e=t=>o.push({l:'e',t}),w=t=>o.push({l:'w',t}),
   if(pr<=0)e('Il grezzo non entra nelle ganasce: spostalo o sposta la faccia delle ganasce.');
   else if(S.cf>S.zmax)e('Le ganasce arrivano oltre la fine del grezzo: non resta materiale da lavorare.');
   else{if(pr<Math.min(10,S.L/3))w(`Presa nelle ganasce molto corta (${+pr.toFixed(1)} mm): il pezzo non è trattenuto bene.`);const fr=S.zmax-S.cf;if(fr>4*S.D)w(`Sbalzo di ${+fr.toFixed(1)} mm (> 4 x Ø): servirebbe la contropunta.`)}
+  if(num('ltd',6)<=0||num('ltd',6)>20)e('Larghezza standard utensile tornio non valida (deve essere tra 0,1 e 20 mm).');
+  const toolTable=$('lt').value.trim(),toolNumbers=new Set();
+  if(toolTable&&toolTable.split(/[,;]/).some(p=>{const[a,type,value,...rest]=p.trim().split(':'),legacy=value===undefined,kind=legacy?'esterno':type,width=legacy?type:value;if(!Number.isInteger(+a)||+a<1||toolNumbers.has(+a)||!LATHE_TOOL_TYPES[kind]||!isFinite(+width)||+width<.1||+width>20||rest.length)return true;toolNumbers.add(+a);return false}))e('Tabella utensili tornio non valida: usa numero:tipo:larghezza, per esempio 1:esterno:6, 2:gole:3, 3:troncatore:2, 4:filettatore:0.8. È supportato anche il vecchio formato numero:larghezza.');
   if(S.zmax<S.PX)w('Il grezzo non arriva a Z0: manca il materiale da sfacciare e si lavora in aria.');
   if(0<l.x||0>l.x+l.w)w('Lo zero macchina (Z0) è fuori dalla corsa.');
  }else{
@@ -272,9 +305,16 @@ function flipProf(P){const n=P.length;let a=0,b=n-1;while(a<n&&P[a]<=1)a++;while
 function initProf(S){return new Float32Array(S.N).fill(S.R)}
 function initSnap(S){S=S||setup();return{f:0,s:0,t:0,sp:0,cl:0,fm:S.lathe?95:94,cs:97,rpm:0,ox:S.PX,oy:S.PY,dia:true,abs:true}}
 const isRad=g=>g.k==1&&Math.abs(g.x1-g.x0)<1e-9&&Math.abs(g.y1)<Math.abs(g.y0)-1e-9;
-// la sfacciatura (moto solo in X) toglie lo strato a destra della punta (max 6 mm)
-function lpt(P,S,x,y,rad){const k=Math.round((x-S.zmin)/DZ),a=Math.abs(y),n=rad?60:0;for(let m=0;m<=n;m++){const q=k+m;if(q>=0&&q<P.length&&a<P[q])P[q]=a}}
-function carveSeg(P,S,g,t0,t1){if(g.k==0||t1<=t0)return;const n=Math.max(1,Math.ceil((t1-t0)*g.len/.05)),rad=isRad(g);for(let j=0;j<=n;j++){const p=at(g,t0+(t1-t0)*j/n);lpt(P,S,p.x,p.y,rad)}}
+// I movimenti radiali usano la larghezza dell'utensile impostata nella tabella T.
+function lpt(P,S,x,y,rad,width=6){const k=Math.round((x-S.zmin)/DZ),a=Math.abs(y),n=rad?Math.max(1,Math.ceil(width/DZ)):0;let gap=-1;for(let m=0;m<=n;m++){const q=k+m;if(q>=0&&q<P.length&&a<P[q]){if(a<=.001&&P[q]>.001&&gap<0)gap=q;P[q]=a}}return gap}
+function detachLatheParts(P,gap){
+ let removed=0;for(let k=gap+1;k<P.length;k++)if(P[k]>.001){P[k]=0;removed++}
+ return removed
+}
+function threadPoint(P,S,g,x,y){const pitch=g.pitch,a=Math.abs(y),flat=Math.min(g.d/2,pitch*.2),flank=Math.max(DZ,pitch/2-flat),reach=Math.ceil((pitch/2+flat)/DZ),k=Math.round((x-S.zmin)/DZ);let gap=-1;
+ for(let m=-reach;m<=reach;m++){const q=k+m;if(q<0||q>=P.length)continue;const z=S.zmin+q*DZ,phase=((z-g.x0+pitch/2)%pitch+pitch)%pitch,delta=Math.abs(phase-pitch/2),r=Math.min(S.R,a+Math.max(0,delta-flat)/flank*Math.max(0,S.R-a));if(r<P[q]){if(r<=.001&&P[q]>.001&&gap<0)gap=q;P[q]=r}}
+ return gap}
+function carveSeg(P,S,g,t0,t1){if(g.k==0||t1<=t0)return 0;const n=Math.max(1,Math.ceil((t1-t0)*g.len/.05)),rad=isRad(g);let removed=0;for(let j=0;j<=n;j++){const p=at(g,t0+(t1-t0)*j/n),gap=g.thread?threadPoint(P,S,g,p.x,p.y):lpt(P,S,p.x,p.y,rad,g.d);if(gap>=0)removed+=detachLatheParts(P,gap)}return removed}
 function collide(g,sp,S){const n=Math.min(400,Math.ceil(g.len/.5)+1),r=(g.d||TD())/2,s=S.st,l=S.lim;
  for(let j=0;j<=n;j++){const p=at(g,j/n),inS=p.x+r>s.x&&p.x-r<s.x+s.w&&p.y+r>s.y&&p.y-r<s.y+s.h;let m=null;
   if(p.x<l.x||p.x>l.x+l.w||p.y<l.y||p.y>l.y+l.h)m='Fuori corsa macchina (oltre l\'area di lavoro)';
@@ -288,7 +328,7 @@ function collideL(g,sp,S,P){const n=Math.ceil(g.len/.05)+1,l=S.lim,rad=isRad(g);
   else if(p.x>S.cz0&&p.x<S.cz1&&a<S.cr)m='Utensile contro il mandrino (ganasce)';
   else{const k=Math.round((p.x-S.zmin)/DZ);if(k>=0&&k<P.length&&a<P[k]-.02){if(g.k==0)m='G00 rapido dentro il materiale: urto utensile/pezzo (usa G1)';else if(!sp)m='Mandrino fermo: utensile in presa nel pezzo'}}
   if(m){g.colT=j/n;return m}
-  if(g.k>0&&sp)lpt(P,S,p.x,p.y,rad)}
+  if(g.k>0&&sp){const gap=g.thread?threadPoint(P,S,g,p.x,p.y):lpt(P,S,p.x,p.y,rad,g.d);if(gap>=0)detachLatheParts(P,gap)}}
  return null}
 
 /* ======================= PARSER ======================= */
@@ -314,13 +354,14 @@ function parse(src){
   else if(!Number.isInteger(w.N)||w.N<0)err(i,'Numero di blocco N non valido (intero positivo)');
   else{if(w.N<=lastN)err(i,`N${w.N} non crescente (blocco precedente N${lastN})`);lastN=w.N}
   if(bad)return;
-  const gm=gs.filter(g=>g>=0&&g<=3),c=(a,b)=>gs.filter(g=>g==a||g==b).length>1,mS=ms.filter(k=>k>=3&&k<=5);
-  if(gm.length>1)err(i,'Due movimenti (G0-G3) nello stesso blocco');
+  const gm=gs.filter(g=>g>=0&&g<=3||lathe&&g==32),c=(a,b)=>gs.filter(g=>g==a||g==b).length>1,mS=ms.filter(k=>k>=3&&k<=5);
+  if(gm.length>1)err(i,'Due movimenti nello stesso blocco');
   if(c(90,91))err(i,'G90 e G91 insieme');if(c(94,95))err(i,'G94 e G95 insieme');if(c(96,97))err(i,'G96 e G97 insieme');if(c(7,8))err(i,'G7 e G8 insieme');
   if(mS.length>1)err(i,'Più comandi mandrino (M3/M4/M5) nello stesso blocco');if(ms.includes(8)&&ms.includes(9))err(i,'M8 e M9 insieme');
   let ex=null,isEnd=false,stop=false,g92=false,g4=false;
   for(const g of gs){
    if(g>=0&&g<=3&&Number.isInteger(g)){ex=g;m=g}
+   else if(g==32&&lathe){ex=32;m=32}
    else if(g==21);
    else if(g==17)lathe?err(i,'G17 (piano XY) non si usa in tornio: il piano è XZ (G18)'):0;
    else if(g==18)lathe?0:err(i,'G18 non simulato in fresa: il piano è XY (G17). Per il piano XZ passa alla modalità Tornio');
@@ -328,7 +369,7 @@ function parse(src){
    else if(g==4)g4=true;
    else if(g==7&&lathe)dia=true;else if(g==8&&lathe)dia=false;
    else if(g==90)abs=true;else if(g==91)abs=false;else if(g==94||g==95)fm=g;else if(lathe&&(g==98||g==99))fm=g==98?94:95;else if(g==96||g==97)cs=g;else if(g==92||g==50)g92=true;
-   else err(i,`Codice G non supportato: G${g}. Supportati: G0-G4, ${lathe?'G7, G8, G18, G50, G90, G91, G92, G94-G99':'G17, G21, G90, G91, G92, G94-G97'}`)}
+   else err(i,`Codice G non supportato: G${g}. Supportati: G0-G4, ${lathe?'G7, G8, G18, G32, G50, G90, G91, G92, G94-G99':'G17, G21, G90, G91, G92, G94-G97'}`)}
   if('F' in w)f=w.F;if('S' in w&&!g92)s=w.S;
   if('T' in w){if(lathe){ta=w.T>=100?Math.floor(w.T/100):w.T}else pend=w.T}
   for(const k of ms){
@@ -353,10 +394,14 @@ function parse(src){
    else{
     const hv=lathe?w.Z:w.X,vv=lathe?(w.X===undefined?undefined:w.X*fx):w.Y;
     const nx=abs?(hv??cx):cx+(hv||0),ny=abs?(vv??cy):cy+(vv||0),nz=lathe?0:(abs?(w.Z??cz):cz+(w.Z||0));
-    seg={k:m,x0:cx,y0:cy,z0:cz,x1:nx,y1:ny,z1:nz};let ok=true;
-    if(m>=1&&!f){err(i,`Manca avanzamento F per G${m}`);ok=false}
+    seg={k:m==32?1:m,x0:cx,y0:cy,z0:cz,x1:nx,y1:ny,z1:nz,thread:m==32,pitch:m==32?f:0};let ok=true;
+    if(m==32&&(!('F' in w)||f<=0||f>20)){err(i,'G32 richiede F esplicito come passo in mm/giro (0 < F <= 20).');ok=false}
+    else if(m==32&&LT(ta).type!='filettatore'){err(i,'G32 richiede un utensile di tipo filettatore (seleziona T corrispondente).');ok=false}
+    else if(m==32&&Math.abs(nx-cx)<1e-9){err(i,'G32 richiede uno spostamento lungo Z per generare il filetto.');ok=false}
+    if(m>=1&&m!=32&&!f){err(i,`Manca avanzamento F per G${m}`);ok=false}
     else if(m>=1&&fm==95&&(!sp||!rpm)){err(i,'G95/G99 (mm/giro) richiede mandrino acceso (M3/M4) con S');ok=false}
-    if(m>=2&&ok){
+    else if(m==32&&(!sp||rpm<=0)){err(i,'G32 richiede mandrino acceso (M3/M4) con velocità S positiva.');ok=false}
+    if((m==2||m==3)&&ok){
      const io=lathe?w.K:w.I,jo=lathe?w.I:w.J,hasC=lathe?('K' in w||'I' in w):('I' in w||'J' in w);
      if('R' in w&&hasC){err(i,`Usa ${lathe?'I,K':'I,J'} oppure R, non entrambi`);ok=false}
      const cw=m==2,dx=nx-cx,dy=ny-cy,d=Math.hypot(dx,dy);let ccx,ccy;
@@ -376,9 +421,9 @@ function parse(src){
        else{Object.assign(seg,{cx:ccx,cy:ccy,r,a0,dd});seg.len=Math.hypot(Math.abs(dd)*r,nz-cz)}}}}
     else if(ok)seg.len=Math.hypot(nx-cx,ny-cy,nz-cz);
     if(!ok)seg=null;
-    else{seg.fv=m==0?2400:fm==95?f*rpm:f;cx=nx;cy=ny;cz=nz;
+    else{seg.fv=m==0?2400:m==32?f*rpm:fm==95?f*rpm:f;cx=nx;cy=ny;cz=nz;
      seg.x0+=ox;seg.x1+=ox;seg.y0+=oy;seg.y1+=oy;if(m>=2){seg.cx+=ox;seg.cy+=oy}
-     seg.d=lathe?0:TD(ta);seg.col=lathe?collideL(seg,sp,S,P):collide(seg,sp,S);if(seg.col)cols.push({i,x:seg.col})}}}
+     seg.d=lathe?LTW(ta):TD(ta);seg.col=lathe?collideL(seg,sp,S,P):collide(seg,sp,S);if(seg.col)cols.push({i,x:seg.col})}}}
   const desc=[...gs.map(g=>DICT['G'+String(g).padStart(2,'0')]),...ms.map(k=>DICT['M'+String(k).padStart(2,'0')])].filter(Boolean).join(' ');
   its.push({i,seg,end:isEnd,stop,flip:fl,N:w.N,desc,snap:{f,s,t:ta,sp,cl,fm,cs,rpm:rpm>1e8?0:rpm,ox,oy,dia,abs}});
   if(isEnd){end=true;endSeen=true}
@@ -524,7 +569,7 @@ function mon(){
  if(lat){$('l1').innerHTML='X '+(k==2?'&Oslash;':'R');$('d1').textContent=((pos.y-snap.oy)*k).toFixed(3);$('m1').textContent='macchina '+(pos.y*2).toFixed(2)+' (Ø)';$('d3').textContent=(pos.x-snap.ox).toFixed(3);$('m3').textContent='macchina '+pos.x.toFixed(2)}
  else{$('l1').textContent='X';$('d1').textContent=(pos.x-snap.ox).toFixed(3);$('m1').textContent='macchina '+pos.x.toFixed(2);$('d2').textContent=(pos.y-snap.oy).toFixed(3);$('m2').textContent='macchina '+pos.y.toFixed(2);$('d3').textContent=pos.z.toFixed(3);$('m3').textContent=''}
  const st=crash?'INTERFERENZA':run?'In esecuzione':idx>=items.length&&idx>0?'Finito':'Fermo';
- $('chips').innerHTML=`<span>Blocco <b>${curLine>=0&&it?'N'+it.N:'-'}</b></span><span>T <b>${snap.t}</b></span><span>F <b>${snap.f}${snap.fm==95?' mm/giro':' mm/min'}</b></span><span>S <b>${rpm}${snap.cs==96?' (G96)':''}</b></span><span>Refrig. <b>${snap.cl?'ON':'off'}</b></span><span>Stato <b style="color:${crash?'var(--rd)':run?'var(--gr)':'var(--ye)'}">${st}</b></span>`;
+ $('chips').innerHTML=`<span>Blocco <b>${curLine>=0&&it?'N'+it.N:'-'}</b></span><span>T <b>${snap.t} · ${lat?LTN(snap.t):'Fresa'}</b></span><span>F <b>${snap.f}${snap.fm==95?' mm/giro':' mm/min'}</b></span><span>S <b>${rpm}${snap.cs==96?' (G96)':''}</b></span><span>Refrig. <b>${snap.cl?'ON':'off'}</b></span><span>Stato <b style="color:${crash?'var(--rd)':run?'var(--gr)':'var(--ye)'}">${st}</b></span>`;
  $('spin').className=on?(snap.sp>0?'on cw':'on ccw'):'off';
  $('spt').textContent=on?(snap.sp>0?'MANDRINO ON - ORARIO (M3)':'MANDRINO ON - ANTIORARIO (M4)'):'MANDRINO FERMO (M5)';
  $('sps').textContent=on?rpm+' giri/min'+(snap.cs==96?'  ('+snap.s+' m/min)':''):(snap.s?'S'+snap.s+' impostato':'0 giri/min');
@@ -540,7 +585,7 @@ function adv(dt){
   const lim=g.col?g.colT*g.len:g.len,v=g.fv/60*8*(+$('spd').value),need=(lim-prog)/v,p0=prog;let fin=false;
   if(need>dt){prog+=v*dt;dt=0;pos=at(g,prog/g.len)}
   else{dt-=need;prog=lim;pos=at(g,prog/g.len);fin=true}
-  if(PROF&&snap.sp)carveSeg(PROF,S,g,p0/g.len,prog/g.len);
+  if(PROF&&snap.sp&&carveSeg(PROF,S,g,p0/g.len,prog/g.len)>0)con('Pezzo staccato: la parte non più collegata al mandrino è stata rimossa.','i',it.i);
   if(fin){
    if(g.col){crash=g.col;run=false;con('INTERFERENZA riga '+(it.i+1)+': '+g.col+'. Premi Reset.','e',it.i)}
    else{done(it);if(stepM)run=false}}}
@@ -574,9 +619,16 @@ function drawLathe(Z){
   c.font='700 11px Segoe UI,sans-serif';c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.fillText('GANASCE',SX(j0)+jw*V.s/2,SY(Z.R+10)+5*V.s);c.fillText('GANASCE',SX(j0)+jw*V.s/2,SY(-Z.R)+5*V.s);c.textAlign='left';c.textBaseline='alphabetic'}
  c.setLineDash([14,4,3,4]);c.strokeStyle='#6b7787';c.lineWidth=1;c.beginPath();c.moveTo(0,SY(0));c.lineTo(cv.width/dpr,SY(0));c.stroke();c.setLineDash([])}
 function drawLatheTool(){
- const px=SX(pos.x),py=SY(pos.y),pts=[[0,0],[16,-8],[24,-8],[70,-8],[70,-34],[24,-34],[9,-14]];
- c.fillStyle=crash?'rgba(255,60,60,.55)':'rgba(255,210,74,.3)';c.strokeStyle=crash?'#ff3b3b':snap.sp?'#ffd24a':'#aaa';c.lineWidth=2;c.beginPath();pts.forEach((q,j)=>j?c.lineTo(px+q[0],py+q[1]):c.moveTo(px+q[0],py+q[1]));c.closePath();c.fill();c.stroke();
- c.beginPath();c.moveTo(px-6,py);c.lineTo(px+6,py);c.moveTo(px,py-6);c.lineTo(px,py+6);c.stroke()}
+ const px=SX(pos.x),py=SY(pos.y),type=LT(snap.t).type,active=crash?'#ff3b3b':snap.sp?'#ffd24a':'#aab4c0';
+ c.save();c.lineWidth=2;c.lineJoin='round';c.strokeStyle='#8794a3';c.fillStyle='#394451';c.fillRect(px-15,py-66,30,22);c.strokeRect(px-15,py-66,30,22);
+ c.strokeStyle=active;c.fillStyle=crash?'rgba(255,60,60,.55)':'rgba(255,210,74,.35)';
+ c.beginPath();
+ if(type=='gole'){c.moveTo(px-7,py);c.lineTo(px-7,py-42);c.lineTo(px-16,py-48);c.lineTo(px-16,py-58);c.lineTo(px+16,py-58);c.lineTo(px+16,py-48);c.lineTo(px+7,py-42);c.lineTo(px+7,py)}
+ else if(type=='troncatore'){c.moveTo(px-3,py);c.lineTo(px-3,py-46);c.lineTo(px-13,py-53);c.lineTo(px-13,py-58);c.lineTo(px+13,py-58);c.lineTo(px+13,py-53);c.lineTo(px+3,py-46);c.lineTo(px+3,py)}
+ else if(type=='filettatore'){c.moveTo(px,py);c.lineTo(px-15,py-18);c.lineTo(px-11,py-42);c.lineTo(px+11,py-42);c.lineTo(px+15,py-18)}
+ else{c.moveTo(px,py);c.lineTo(px+15,py-13);c.lineTo(px+22,py-29);c.lineTo(px+16,py-44);c.lineTo(px-13,py-44);c.lineTo(px-20,py-27)}
+ c.closePath();c.fill();c.stroke();c.beginPath();c.moveTo(px-6,py);c.lineTo(px+6,py);c.moveTo(px,py-6);c.lineTo(px,py+6);c.stroke();
+ c.font='700 11px Segoe UI,sans-serif';c.fillStyle='#ffd24a';c.fillText(`T${snap.t} · ${LTN(snap.t)} · ${LTW(snap.t).toFixed(1)} mm`,px+18,py+14);c.restore()}
 function draw(){
  const w=cv.width/dpr,h=cv.height/dpr;c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
  const lathe=MODE=='lathe',m=[1,2,5,10,20,50,100,200,500,1000].find(v=>v*V.s>=12)||1000,x0=-V.ox/V.s,x1=(w-V.ox)/V.s,y0=(V.oy-h)/V.s,y1=V.oy/V.s;
@@ -606,14 +658,30 @@ let last=0;function loop(ts){const dt=Math.min((ts-last)/1000,.1);last=ts;if(run
 function fit(){const w=cv.width/dpr,h=cv.height/dpr,Z=setup(),pad=60;
  if(Z.lathe){const x0=Math.min(Z.cz0,Z.zmin),x1=Math.max(Z.zmax,Z.cz1)+10,zm=(x0+x1)/2;V.s=Math.max(.5,Math.min((w-pad*2)/(x1-x0),(h-pad*2)/(2*Z.cr)));V.ox=w/2-zm*V.s;V.oy=h/2;return}
  const st=Z.st;V.s=Math.max(.5,Math.min((w-pad*2)/st.w,(h-pad*2)/st.h));V.ox=w/2-(st.x+st.w/2)*V.s;V.oy=h/2+(st.y+st.h/2)*V.s}
-let first=true;let rz=0;new ResizeObserver(()=>{cancelAnimationFrame(rz);rz=requestAnimationFrame(()=>{dpr=devicePixelRatio||1;const b=cv.parentElement.getBoundingClientRect();if(!b.width||!b.height)return;cv.width=Math.round(b.width*dpr);cv.height=Math.round(b.height*dpr);if(first){fit();first=false}})}).observe(cv.parentElement);
+let first=true,lastCanvas={w:0,h:0},rz=0;new ResizeObserver(()=>{cancelAnimationFrame(rz);rz=requestAnimationFrame(()=>{dpr=devicePixelRatio||1;const b=cv.parentElement.getBoundingClientRect();if(!b.width||!b.height)return;cv.width=Math.round(b.width*dpr);cv.height=Math.round(b.height*dpr);if(first){fit();first=false}else if(lastCanvas.w&&lastCanvas.h){const z=Math.min(b.width/lastCanvas.w,b.height/lastCanvas.h);V.s=Math.max(.3,Math.min(400,V.s*z));V.ox=b.width/2+(V.ox-lastCanvas.w/2)*z;V.oy=b.height/2+(V.oy-lastCanvas.h/2)*z}lastCanvas={w:b.width,h:b.height}})}).observe(cv.parentElement);
 cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,wx=(mx-V.ox)/V.s,wy=(V.oy-my)/V.s,f=e.deltaY<0?1.15:1/1.15;V.s=Math.max(.3,Math.min(400,V.s*f));V.ox=mx-wx*V.s;V.oy=my+wy*V.s},{passive:false});
-let drag=null;cv.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'});
-cv.addEventListener('pointermove',e=>{if(drag){V.ox+=e.clientX-drag.x;V.oy+=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY}}});
-cv.addEventListener('pointerup',()=>{drag=null;cv.style.cursor='grab'});
+let drag=null,pointers=new Map(),pinch=null,lastTouchTap=null;
+function zeroAt(e){const r=cv.getBoundingClientRect(),x=Math.round((e.clientX-r.left-V.ox)/V.s),y=Math.round((V.oy-e.clientY+r.top)/V.s);if(MODE=='lathe')$('lz').value=x;else{$('px').value=x;$('py').value=y}reparse()}
+cv.addEventListener('pointerdown',e=>{
+ pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});cv.setPointerCapture(e.pointerId);
+ if(e.pointerType=='touch'){
+  const now=performance.now(),p=lastTouchTap&&Math.hypot(e.clientX-lastTouchTap.x,e.clientY-lastTouchTap.y)<32&&now-lastTouchTap.time<380;
+  if(p){zeroAt(e);lastTouchTap=null;e.preventDefault()}else lastTouchTap={x:e.clientX,y:e.clientY,time:now}
+ }
+ if(pointers.size>=2){const [a,b]=[...pointers.values()],x=(a.x+b.x)/2,y=(a.y+b.y)/2;pinch={x,y,d:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y))};drag=null}
+ else{drag={x:e.clientX,y:e.clientY};cv.style.cursor='grabbing'}
+});
+cv.addEventListener('pointermove',e=>{
+ if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(pointers.size>=2){const [a,b]=[...pointers.values()],x=(a.x+b.x)/2,y=(a.y+b.y)/2,d=Math.max(1,Math.hypot(a.x-b.x,a.y-b.y));if(pinch){const wx=(pinch.x-V.ox)/V.s,wy=(V.oy-pinch.y)/V.s,z=Math.max(.3,Math.min(400,V.s*d/pinch.d));V.s=z;V.ox=x-wx*z;V.oy=y+wy*z}pinch={x,y,d};drag=null}
+ else if(drag){V.ox+=e.clientX-drag.x;V.oy+=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY}}
+});
+function endPointer(e){pointers.delete(e.pointerId);if(pointers.size>=2){const[a,b]=[...pointers.values()];pinch={x:(a.x+b.x)/2,y:(a.y+b.y)/2,d:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y))}}else{pinch=null;drag=pointers.size?[...pointers.values()][0]:null;if(drag)drag={x:drag.x,y:drag.y};cv.style.cursor='grab'}}
+cv.addEventListener('pointerup',endPointer);cv.addEventListener('pointercancel',endPointer);cv.addEventListener('lostpointercapture',endPointer);
 
 /* ======================= UI ======================= */
-const MILL_IDS=['tt','sw','sh','td','sz','px','py','zc','mx0','mx1','my0','my1','gx','gy','gz'],LATHE_IDS=['ld','ll','lp','lcf','lz','lz0','lz1','lmx'],IDS=[...MILL_IDS,...LATHE_IDS];
+const MILL_IDS=['tt','sw','sh','td','sz','px','py','zc','mx0','mx1','my0','my1','gx','gy','gz'],LATHE_IDS=['ld','ll','lp','lcf','lz','lz0','lz1','lmx','lt','ltd'],IDS=[...MILL_IDS,...LATHE_IDS];
+const LATHE_DEFAULTS={ld:40,ll:60,lp:2,lcf:112,lz:150,lz0:0,lz1:300,lmx:200,lt:'1:esterno:6, 2:gole:3, 3:troncatore:2, 4:filettatore:0.8',ltd:6};
 function setMode(m){MODE=m;document.body.classList.toggle('lathe',m=='lathe');document.querySelectorAll('.seg button[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m==m));
  $('sub').textContent=m=='lathe'?'Tornio G-Code \u00b7 piano XZ (X = diametro)':'Fresatura G-Code \u00b7 piano XY';
  $('ex').innerHTML=Object.keys(EX).filter(k=>EX[k].mode==m).map(k=>`<option>${k}</option>`).join('');
@@ -622,7 +690,7 @@ function setMode(m){MODE=m;document.body.classList.toggle('lathe',m=='lathe');do
  buildGuide()}
 function load(n){const e=EX[n];setMode(e.mode);$('ex').value=n;code.value=e.code;fixL=new Set();backup=null;$('un').hidden=true;
  if(e.mode=='mill'){$('sw').value=e.w;$('sh').value=e.h;$('td').value=e.d;$('tt').value=e.tt||'1:'+e.d+', 2:'+e.d;$('sz').value=e.sz;$('px').value=e.px;$('py').value=e.py;$('zc').value=e.zc;$('gx').value=e.gx||0;$('gy').value=e.gy||0;$('gz').value=e.gz||0;Object.keys(MILLD).forEach(k=>$(k).value=e[k]??MILLD[k])}
- else LATHE_IDS.forEach(i=>$(i).value=e[i]);
+ else LATHE_IDS.forEach(i=>$(i).value=e[i]??LATHE_DEFAULTS[i]);
  reparse();fit()}
 $('ex').onchange=e=>load(e.target.value);
 document.querySelectorAll('.seg button[data-m]').forEach(b=>b.onclick=()=>{if(b.dataset.m!=MODE)load(Object.keys(EX).find(k=>EX[k].mode==b.dataset.m))});
@@ -637,7 +705,7 @@ IDS.forEach(i=>$(i).onchange=()=>{reparse();if(['sw','sh','zc','px','py','gx','g
 // preset: sposta la corsa in modo che lo zero macchina cada nel punto scelto
 $('mcp').onchange=e=>{const k=e.target.value;if(k==='')return;const w=Math.abs(num('mx1',400)-num('mx0',0)),h=Math.abs(num('my1',300)-num('my0',0)),a=[[0,w,0,h],[-w,0,0,h],[0,w,-h,0],[-w,0,-h,0],[-w/2,w/2,-h/2,h/2]][+k];['mx0','mx1','my0','my1'].forEach((id,j)=>$(id).value=a[j]);e.target.value='';reparse();fit()};
 $('lmp').onchange=e=>{const k=e.target.value;if(k==='')return;const w=Math.abs(num('lz1',300)-num('lz0',0)),a=[[0,w],[-w,0],[-w/2,w/2]][+k];$('lz0').value=a[0];$('lz1').value=a[1];e.target.value='';reparse();fit()};
-cv.ondblclick=e=>{const r=cv.getBoundingClientRect(),x=Math.round((e.clientX-r.left-V.ox)/V.s),y=Math.round((V.oy-e.clientY+r.top)/V.s);if(MODE=='lathe')$('lz').value=x;else{$('px').value=x;$('py').value=y}reparse()};
+cv.ondblclick=zeroAt;
 function openDrawer(on){$('drawer').parentElement.classList.toggle('dr',on===undefined?!$('drawer').parentElement.classList.contains('dr'):!!on)}
 $('setb').onclick=()=>openDrawer();$('dclose').onclick=()=>openDrawer(0);
 function tab(t){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));document.querySelectorAll('.tp').forEach(p=>p.hidden=p.dataset.t!=t)}
